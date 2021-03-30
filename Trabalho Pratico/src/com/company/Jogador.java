@@ -11,9 +11,45 @@ public class Jogador {
     private int jogoDeCabeca;
     private int remate;
     private int passe;
-    private int elasticidade;
+    private int habilidade;
     private String posicao; // (GR, Defesa, Medios, Avançados)
     private ArrayList<String> historial;
+
+
+    public int calculateHability(){
+        int result = 0;
+        switch(getPosicao()){
+            case "Defesa" :
+                  result = (int)((double) this.getVelocidade() * 0.10 +
+                                 (double) this.getResistencia() * 0.10 +
+                                 (double) this.getDestreza() * 0.10 +
+                                 (double) this.getImpulsao() * 0.20 +
+                                 (double) this.getJogoDeCabeca() * 0.3 +
+                                 (double) this.getRemate() * 0.05 +
+                                 (double) this.getPasse() * 0.15);
+                break;
+            case "Médio" :
+                result = (int)((double) this.getVelocidade() * 0.10 +
+                        (double) this.getResistencia() * 0.15 +
+                        (double) this.getDestreza() * 0.20 +
+                        (double) this.getImpulsao() * 0.05 +
+                        (double) this.getJogoDeCabeca() * 0.05 +
+                        (double) this.getRemate() * 0.15 +
+                        (double) this.getPasse() * 0.20);
+                break;
+            case "Avançado" :
+                result = (int)((double) getVelocidade() * 0.15 +
+                        (double) this.getResistencia() * 0.15 +
+                        (double) this.getDestreza() * 0.10 +
+                        (double) this.getImpulsao() * 0.15 +
+                        (double) this.getJogoDeCabeca() * 0.15 +
+                        (double) this.getRemate() * 0.20 +
+                        (double) this.getPasse() * 0.10);
+                break;
+
+        }
+        return result;
+    }
 
     //Construtores
 
@@ -27,6 +63,7 @@ public class Jogador {
         this.remate = 0;
         this.passe = 0;
         this.posicao = "";
+        this.habilidade = 0;
         this.historial = new ArrayList<>();
     }
 
@@ -42,6 +79,7 @@ public class Jogador {
         this.posicao = posicao;
         this.historial = new ArrayList<>();
         this.historial.addAll(historial);
+        this.habilidade = this.calculateHability();
     }
 
     public Jogador(Jogador j){
@@ -54,6 +92,7 @@ public class Jogador {
         this.remate = j.getRemate();
         this.passe = j.getPasse();
         this.posicao = j.getPosicao();
+        this.habilidade = j.getHabilidade();
         this.historial = new ArrayList<>();
         this.historial.addAll(j.getHistorial());
     }
@@ -97,7 +136,11 @@ public class Jogador {
     }
 
     public ArrayList<String> getHistorial() {
-        return historial;
+        return this.historial;
+    }
+
+    public int getHabilidade() {
+        return this.habilidade;
     }
 
     //Setters
@@ -142,11 +185,20 @@ public class Jogador {
         this.historial = historial;
     }
 
+    public void setHabilidade(int habilidade) {
+        this.habilidade = habilidade;
+    }
+
+
     public String toString(){
-        return "\nEstatísticas do Jogador: \nNome: " + this.nome + "\nVelocidade: " + this.velocidade + "\nResistencia: " + this.resistencia +
+        return "\nEstatísticas do Jogador: \nNome: " + this.nome /*+
+                "\nVelocidade: " + this.velocidade + "\nResistencia: " + this.resistencia +
                 "\nDestreza: " + this.destreza + "\nImpulsão: " + this.impulsao + "\nJogo De Cabeça: " + this.jogoDeCabeca +
-                "\nRemate: " + this.remate + "\nPasse: " + this.passe + "\nPosição: " + this.posicao + "\nHistorial: " +
-                this.historial.toString();
+                "\nRemate: " + this.remate + "\nPasse: " + this.passe + "\nPosição: " + this.posicao + "\nHabilidade: " + this.habilidade +
+                "\nHistorial: " + this.historial.toString()
+                ;
+                 */
+                ;
     }
 
     //clone
@@ -165,7 +217,7 @@ public class Jogador {
 
         return (this.nome.equals(j.getNome()) && this.velocidade == j.getVelocidade() && this.resistencia == j.getResistencia() && this.destreza == j.getDestreza() &&
                 this.impulsao == j.getImpulsao() && this.jogoDeCabeca == j.getJogoDeCabeca() && this.remate == j.getRemate() && this.passe == j.getPasse() &&
-                this.posicao.equals(j.getPosicao()) && this.historial.equals(j.getHistorial()));
+                this.habilidade == j.getHabilidade() && this.posicao.equals(j.getPosicao()) && this.historial.equals(j.getHistorial()));
     }
 
 }
