@@ -65,7 +65,7 @@ public class Liga {
      * @return
      */
     public boolean transferencia (Equipa destino, String nome){
-        Jogador transferido = new Jogador();
+        Jogador transferido = null;
         Iterator<Equipa> it = this.equipas.iterator();              //o iterador percorre a liga, equipa a equipa
         ArrayList<Jogador> novo = new ArrayList<>();
         Equipa a;

@@ -43,6 +43,10 @@ public class GuardaRedes extends Jogador{
             return result;
         }
 
+        public GuardaRedes clone(){
+            return  new GuardaRedes(this);
+        }
+
 }
 
 

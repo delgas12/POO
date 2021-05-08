@@ -2,7 +2,7 @@ package com.company;
 
 import java.util.ArrayList;
 
-public class Jogador {
+public abstract class Jogador {
     private String nome;
     private int velocidade;
     private int resistencia;
@@ -16,8 +16,8 @@ public class Jogador {
     private ArrayList<String> historial;
 
 
-    public int calculateHability(){
-        int result = 0;
+    public abstract  int calculateHability();
+     /*   int result = 0;
         switch(getPosicao()){
             case "Defesa" :
                   result = (int)((double) this.getVelocidade() * 0.10 +
@@ -50,6 +50,7 @@ public class Jogador {
         }
         return result;
     }
+      */
 
     //Construtores
 
@@ -203,9 +204,7 @@ public class Jogador {
 
     //clone
 
-    public Jogador clone(){
-        return new Jogador(this);
-    }
+    public abstract Jogador clone();
 
     //equals
 

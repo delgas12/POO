@@ -11,9 +11,9 @@ public class Main {
         ArrayList<String> histToldy = new ArrayList<>();
         histToldy.add("Toldyela");
         histToldy.add("TONDELA CARALHO");
-        Jogador ToldyDefesa = new Jogador("ToldyDefesa", 70, 80, 75, 68, 73, 90, 60, "Defesa", histToldy);
-        Jogador ToldyMedio = new Jogador("ToldyMedio", 70, 80, 100, 68, 73, 90, 100, "Médio", histToldy);
-        Jogador ToldyAvancado = new Jogador("boi", 70, 80, 100, 68, 73, 100, 60, "Avançado", histToldy);
+        Jogador ToldyDefesa = new Medio("ToldyDefesa", 70, 80, 75, 68, 73, 90, 60, "Defesa", histToldy);
+        Jogador ToldyMedio = new Avancado("ToldyMedio", 70, 80, 100, 68, 73, 90, 100, "Médio", histToldy);
+        Jogador ToldyAvancado = new Lateral("boi", 70, 80, 100, 68, 73, 100, 60, "Avançado", histToldy);
         GuardaRedes ToldyGR = new GuardaRedes("ToldyGR", 10, 15, 70, 85, 69, 75, 90, "GuardaRedes", histToldy, 100);
         ArrayList<Jogador> titulares = new ArrayList<>();
         titulares.add(ToldyDefesa);
@@ -42,9 +42,9 @@ public class Main {
         ArrayList<String> histToldy2 = new ArrayList<>();
         histToldy2.add("Toldyela");
         histToldy2.add("TONDELA CARALHO");
-        Jogador CasticoDefesa = new Jogador("CasticoDefesa", 70, 80, 75, 68, 73, 90, 60, "Defesa", histToldy);
-        Jogador CasticoMedio = new Jogador("CasticoMedio", 70, 80, 100, 68, 73, 90, 100, "Médio", histToldy);
-        Jogador CasticoAvancado = new Jogador("boiCastico", 70, 80, 100, 68, 73, 100, 60, "Avançado", histToldy);
+        Jogador CasticoDefesa = new Medio("CasticoDefesa", 70, 80, 75, 68, 73, 90, 60, "Defesa", histToldy);
+        Jogador CasticoMedio = new Lateral("CasticoMedio", 70, 80, 100, 68, 73, 90, 100, "Médio", histToldy);
+        Jogador CasticoAvancado = new Avancado("boiCastico", 70, 80, 100, 68, 73, 100, 60, "Avançado", histToldy);
         GuardaRedes CasticoGR = new GuardaRedes("CasticoGR", 10, 15, 70, 85, 69, 75, 90, "GuardaRedes", histToldy, 100);
         ArrayList<Jogador> titularesCastico = new ArrayList<>();
         titularesCastico.add(CasticoDefesa);

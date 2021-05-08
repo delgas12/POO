@@ -61,7 +61,7 @@ public class Equipa {
     public ArrayList<Jogador> copyList(ArrayList <Jogador> jogadores){
         ArrayList<Jogador> newJogadores = new ArrayList<>(jogadores.size());
         for (Jogador j : jogadores) {
-            newJogadores.add(new Jogador(j));
+            newJogadores.add(j.clone());
         }
         return newJogadores;
     }
@@ -97,8 +97,10 @@ public class Equipa {
      * @param nome  nome do jogador que se pretende remover
      * @return      a funçao devolve o jogador que foi removido (para depois ser introduzido na equipa
      */
+
+    //adicionar exceção caso o jogador nao exista
     public Jogador removeJogador(String nome){
-        Jogador resultado = new Jogador();
+        Jogador resultado = null;
         Iterator<Jogador> itTitulares = titulares.iterator();
         Iterator<Jogador> itSuplentes = suplentes.iterator();
         Jogador j = itTitulares.next();
