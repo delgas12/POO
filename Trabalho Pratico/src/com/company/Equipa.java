@@ -6,31 +6,35 @@ import java.util.Iterator;
 
 import static java.lang.Thread.sleep;
 
-public class Equipa {
-
+public class Equipa implements Comparable<Equipa>{
+    String name;
     private ArrayList<Jogador> titulares;
     private ArrayList<Jogador> suplentes;
 
 
 
     public Equipa(){
+        String name = "";
         this.titulares = new ArrayList<>();
         this.suplentes = new ArrayList<>();
     }
 
     public Equipa(Equipa e){
+        this.name = e.getName();
         this.titulares = new ArrayList<>();
-        this.titulares.addAll(e.getTitulares());
+        this.titulares.addAll(e.getTitulares());//quebras de encapsulamento
         this.suplentes = new ArrayList<>();
-        this.suplentes.addAll(e.getTitulares());
+        this.suplentes.addAll(e.getTitulares());//quebras de encapsulamento
     }
 
-    public Equipa(ArrayList<Jogador> titulares, ArrayList<Jogador> suplentes){
+    public Equipa(String name, ArrayList<Jogador> titulares, ArrayList<Jogador> suplentes){
+        this.name = name;
         this.titulares = copyList(titulares);
         this.suplentes = copyList(suplentes);
     }
 
     //Getters
+    public String getName(){return this.name ; }
 
     public ArrayList<Jogador> getTitulares() {
         return copyList(this.titulares);
@@ -53,6 +57,7 @@ public class Equipa {
 
     public String toString() {
         return "Equipa{" +
+                "Nome: " + this.name +
                 "titulares=" + this.titulares.toString() +
                 ", suplentes=" + this.suplentes.toString() +
                 '}';
@@ -120,6 +125,12 @@ public class Equipa {
         return resultado;
     }
 
+    public int compareTo(Equipa b){
+        //iguais -> 0
+        //primeiro maior que o segundo -> > 0
+        //segundo maior que o primeiro -> < 0
+        return this.getName().compareTo(b.getName());
+    }
 
 
     public Equipa clone(){

@@ -1,9 +1,9 @@
 package com.company;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Liga {
-    private ArrayList<Equipa> equipas;
+    private Map<String,Equipa> equipas;
     private int n_equipas;
 
 
@@ -11,26 +11,31 @@ public class Liga {
         ArrayList<Equipa> equipa = new ArrayList<>();
         this.n_equipas = 0;
     }
-    public Liga(ArrayList<Equipa> equipas, int n_equipas){
-        this.equipas = new ArrayList<>();
-        this.equipas.addAll(equipas);
+    public Liga(Map<String,Equipa> equipas, int n_equipas){
+        this.equipas = new TreeMap<>();
+        Iterator<Map.Entry<String,Equipa>> it = equipas.entrySet().iterator();
+
+        while(it.hasNext()){
+            Equipa e = it.next().getValue();
+            this.equipas.put(e.getName(),e.clone());
+        }
         this.n_equipas = n_equipas;
     }
     public Liga(Liga l){
-        this.equipas = new ArrayList<>();
-        for (Equipa e : l.equipas){
-            this.equipas.add(e.clone());
+        this.equipas = new TreeMap<>();
+        for (Equipa e : l.getEquipasList()){
+            this.equipas.put(e.getName(),e.clone());
         }
-        this.n_equipas = l.n_equipas;
+        this.n_equipas = l.getN_equipas();
     }
 
     //Getters
-    public ArrayList<Equipa> getEquipas() {
-        ArrayList<Equipa> novo = new ArrayList<>();
-        for (Equipa e : this.equipas){
-            novo.add(e.clone());
-        }
-        return novo;
+    public Map<String,Equipa> getEquipas() {
+        return this.equipas.values().stream().map(e -> e.clone()).collect(Collectors.toMap(e -> e.getName(), e -> e.clone()));
+    }
+
+    public List<Equipa> getEquipasList(){
+        return this.equipas.values().stream().map(e -> e.clone()).collect(Collectors.toList());
     }
 
     public int getN_equipas() {
@@ -39,10 +44,12 @@ public class Liga {
     
     //Setters
     
-    public void setEquipas(ArrayList<Equipa> equipas) {
-        ArrayList<Equipa> novo = new ArrayList<>();
-        for (Equipa e : equipas){
-            novo.add(e.clone());
+    public void setEquipas(Map<String,Equipa> equipas) {
+        TreeMap<String,Equipa> novo = new TreeMap<>();
+        Iterator<Map.Entry<String,Equipa>> it = equipas.entrySet().iterator();
+        while(it.hasNext()){
+            Equipa e = it.next().getValue();
+            novo.put(e.getName(),e.clone());
         }
         this.equipas = novo;
     }
@@ -66,12 +73,12 @@ public class Liga {
      */
     public boolean transferencia (Equipa destino, String nome){
         Jogador transferido = null;
-        Iterator<Equipa> it = this.equipas.iterator();              //o iterador percorre a liga, equipa a equipa
+        Iterator<Map.Entry<String,Equipa>> it = equipas.entrySet().iterator();             //o iterador percorre a liga, equipa a equipa
         ArrayList<Jogador> novo = new ArrayList<>();
         Equipa a;
         boolean removeu = false;
         while(it.hasNext() && !removeu){                            //enquanto o iterador nao tiver percorrido a liga até ao fim ou ainda nao tiver sido removido,
-            a = it.next();
+            a = it.next().getValue();
             if (a.encontraJogador(nome)){
                 transferido = a.removeJogador(nome);
                 removeu = true;
@@ -90,6 +97,16 @@ public class Liga {
             }
         }
         return removeu;
+    }
+
+    public String equipasToString(){
+        Iterator<Map.Entry<String,Equipa>> it = equipas.entrySet().iterator();
+        StringBuilder equipas = new StringBuilder("Equipas");
+        while(it.hasNext()){
+            Equipa e = it.next().getValue();
+            equipas.append('a');
+        }
+        return equipas.toString();
     }
 
     public String toString(){

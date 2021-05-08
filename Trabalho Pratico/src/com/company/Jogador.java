@@ -17,40 +17,6 @@ public abstract class Jogador {
 
 
     public abstract  int calculateHability();
-     /*   int result = 0;
-        switch(getPosicao()){
-            case "Defesa" :
-                  result = (int)((double) this.getVelocidade() * 0.10 +
-                                 (double) this.getResistencia() * 0.10 +
-                                 (double) this.getDestreza() * 0.10 +
-                                 (double) this.getImpulsao() * 0.20 +
-                                 (double) this.getJogoDeCabeca() * 0.3 +
-                                 (double) this.getRemate() * 0.05 +
-                                 (double) this.getPasse() * 0.15);
-                break;
-            case "Médio" :
-                result = (int)((double) this.getVelocidade() * 0.10 +
-                        (double) this.getResistencia() * 0.15 +
-                        (double) this.getDestreza() * 0.20 +
-                        (double) this.getImpulsao() * 0.05 +
-                        (double) this.getJogoDeCabeca() * 0.05 +
-                        (double) this.getRemate() * 0.15 +
-                        (double) this.getPasse() * 0.20);
-                break;
-            case "Avançado" :
-                result = (int)((double) getVelocidade() * 0.15 +
-                        (double) this.getResistencia() * 0.15 +
-                        (double) this.getDestreza() * 0.10 +
-                        (double) this.getImpulsao() * 0.15 +
-                        (double) this.getJogoDeCabeca() * 0.15 +
-                        (double) this.getRemate() * 0.20 +
-                        (double) this.getPasse() * 0.10);
-                break;
-
-        }
-        return result;
-    }
-      */
 
     //Construtores
 

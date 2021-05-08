@@ -2,6 +2,7 @@ package com.company;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeMap;
 
 public class Main {
 
@@ -28,7 +29,7 @@ public class Main {
         rocaBanco.add(ToldyGR);
 
          */
-        Equipa osBois = new Equipa(titulares,rocaBanco);
+        Equipa osBois = new Equipa("Equip1",titulares,rocaBanco);
         System.out.println("O TOLDY defesa tem as seguintes habilidade: " + ToldyDefesa.calculateHability());
         System.out.println("O TOLDY medio tem as seguintes habilidade: " + ToldyMedio.calculateHability());
         System.out.println("O TOLDY avançado tem as seguintes habilidade: " + ToldyAvancado.calculateHability());
@@ -53,18 +54,18 @@ public class Main {
         titularesCastico.add(CasticoGR);
         ArrayList<Jogador> rocaBancoCastico = new ArrayList<>();
 
-        Equipa osBois2 = new Equipa(titularesCastico,rocaBancoCastico);
+        Equipa osBois2 = new Equipa("Equip2",titularesCastico,rocaBancoCastico);
 
 
-        ArrayList<Equipa> equipas = new ArrayList<>();
-        equipas.add(osBois);
-        equipas.add(osBois2);
+        TreeMap<String,Equipa> equipas = new TreeMap<>();
+        equipas.put(osBois.getName(),osBois.clone());
+        equipas.put(osBois2.getName(),osBois2.clone());
         Liga potas = new Liga (equipas, 2);
 
 
 
-        System.out.println("Liga dos Bois: \n" + potas.toString());
-
+        System.out.println("Liga dos Bois: \n" + potas);
+        System.out.println(potas.equipasToString());
         System.out.println("\n\n\n\n\n");
 
         System.out.println("Transferiu? " + potas.transferencia(osBois2, "ToldyDefesa"));
@@ -74,7 +75,7 @@ public class Main {
         System.out.println("\n\n\n\n\n");
 
 
-        System.out.println("Liga dos Bois: \n" + potas.toString());
+        System.out.println("Liga dos Bois: \n" + potas.getEquipasList().toString());
         /*
         System.out.println("A liga potas " + potas.toString());
         potas.transferencia(osBois, "ToldyDefesa");

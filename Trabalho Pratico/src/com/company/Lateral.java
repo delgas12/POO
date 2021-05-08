@@ -3,7 +3,7 @@ package com.company;
 import java.util.ArrayList;
 
 public class Lateral extends Jogador{
-
+    private  int cruzamentos; //?? ou passes_longos ?
     public Lateral(){
         super();
     }
