@@ -8,7 +8,7 @@ public class Main {
 
         //Jogador(String nome, int velocidade, int resistencia, int destreza, int impulsao, int jogoDeCabeca, int remate, int passe, String posicao, ArrayList<String> historial) {
     public static void main (String args[]){
-
+/*
         ArrayList<String> histToldy = new ArrayList<>();
         histToldy.add("Toldyela");
         histToldy.add("TONDELA CARALHO");
@@ -22,6 +22,7 @@ public class Main {
         titulares.add(ToldyAvancado);
         titulares.add(ToldyGR);
         ArrayList<Jogador> rocaBanco = new ArrayList<>();
+        */
         /*
         rocaBanco.add(ToldyDefesa);
         rocaBanco.add(ToldyMedio);
@@ -29,6 +30,7 @@ public class Main {
         rocaBanco.add(ToldyGR);
 
          */
+        /*
         Equipa osBois = new Equipa("Equip1",titulares,rocaBanco);
         System.out.println("O TOLDY defesa tem as seguintes habilidade: " + ToldyDefesa.calculateHability());
         System.out.println("O TOLDY medio tem as seguintes habilidade: " + ToldyMedio.calculateHability());

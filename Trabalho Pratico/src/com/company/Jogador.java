@@ -185,4 +185,5 @@ public abstract class Jogador {
                 this.habilidade == j.getHabilidade() && this.posicao.equals(j.getPosicao()) && this.historial.equals(j.getHistorial()));
     }
 
+
 }
