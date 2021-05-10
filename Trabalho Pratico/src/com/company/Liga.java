@@ -4,6 +4,7 @@ import java.util.stream.Collectors;
 
 public class Liga {
     private Map<String,Equipa> equipas;
+    private List<Jogo> jogos;
     private int n_equipas;
 
 
@@ -11,27 +12,34 @@ public class Liga {
         ArrayList<Equipa> equipa = new ArrayList<>();
         this.n_equipas = 0;
     }
+
     public Liga(Map<String,Equipa> equipas, int n_equipas){
         this.equipas = new TreeMap<>();
         Iterator<Map.Entry<String,Equipa>> it = equipas.entrySet().iterator();
 
         while(it.hasNext()){
             Equipa e = it.next().getValue();
-            this.equipas.put(e.getName(),e.clone());
+            this.equipas.put(e.getNome(),e.clone());
         }
         this.n_equipas = n_equipas;
     }
+
     public Liga(Liga l){
         this.equipas = new TreeMap<>();
         for (Equipa e : l.getEquipasList()){
-            this.equipas.put(e.getName(),e.clone());
+            this.equipas.put(e.getNome(),e.clone());
         }
         this.n_equipas = l.getN_equipas();
     }
 
+    public Equipa getEquipa(String nome){
+        return this.equipas.get(nome);
+    }
+
+
     //Getters
     public Map<String,Equipa> getEquipas() {
-        return this.equipas.values().stream().map(e -> e.clone()).collect(Collectors.toMap(e -> e.getName(), e -> e.clone()));
+        return this.equipas.values().stream().map(e -> e.clone()).collect(Collectors.toMap(e -> e.getNome(), e -> e.clone()));
     }
 
     public List<Equipa> getEquipasList(){
@@ -41,15 +49,21 @@ public class Liga {
     public int getN_equipas() {
         return this.n_equipas;
     }
+
+    public List<Jogo> getJogos(){
+        return this.jogos.stream().map(Jogo::clone).collect(Collectors.toList());
+    }
     
     //Setters
-    
+    public void setJogos(List<Jogo> j){
+        this.jogos = j.stream().map(jogo -> jogo.clone()).collect(Collectors.toList());
+    }
     public void setEquipas(Map<String,Equipa> equipas) {
         TreeMap<String,Equipa> novo = new TreeMap<>();
         Iterator<Map.Entry<String,Equipa>> it = equipas.entrySet().iterator();
         while(it.hasNext()){
             Equipa e = it.next().getValue();
-            novo.put(e.getName(),e.clone());
+            novo.put(e.getNome(),e.clone());
         }
         this.equipas = novo;
     }
@@ -64,20 +78,22 @@ public class Liga {
         return new Liga(this);
     }
 
-
+ /*
     /**
      *
      * @param destino equipa para o qual o jogador selecionado será transferido
      * @param nome  Nome do jogador a transferir no formato String
      * @return
      */
-    public boolean transferencia (Equipa destino, String nome){
+    /*
+
+    public boolean transferencia (Equipa destino, String nome) throws JogadorNaoExiste{
         Jogador transferido = null;
         Iterator<Map.Entry<String,Equipa>> it = equipas.entrySet().iterator();             //o iterador percorre a liga, equipa a equipa
         List<Jogador> novo = new ArrayList<>();
         Equipa a;
         boolean removeu = false;
-        while(it.hasNext() && !removeu){                            //enquanto o iterador nao tiver percorrido a liga até ao fim ou ainda nao tiver sido removido,
+        while(it.hasNext() && !removeu){//enquanto o iterador nao tiver percorrido a liga até ao fim ou ainda nao tiver sido removido,
             a = it.next().getValue();
             if (a.encontraJogador(nome)){
                 transferido = a.removeJogador(nome);
@@ -96,9 +112,10 @@ public class Liga {
                 destino.setTitulares(novo);
             }
         }
+        if(!removeu) throw new JogadorNaoExiste("Jogador Não Existe em nenhuma equipa!\n");
         return removeu;
     }
-
+     */
     public String equipasToString(){
         Iterator<Map.Entry<String,Equipa>> it = equipas.entrySet().iterator();
         StringBuilder equipas = new StringBuilder("Equipas");
@@ -108,7 +125,11 @@ public class Liga {
         }
         return equipas.toString();
     }
+/*
+    public Jogador consultaJogador(String ){
 
+    }
+*/
     public String toString(){
         return "Liga: { " +
                 "Equipas: " + this.equipas.toString() +

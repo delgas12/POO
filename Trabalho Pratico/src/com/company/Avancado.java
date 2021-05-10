@@ -5,7 +5,6 @@ import java.util.ArrayList;
 public class Avancado extends Jogador{
 
     private int agilidade;
-
     private int finalizacao;
 
     public Avancado(){
@@ -13,8 +12,8 @@ public class Avancado extends Jogador{
         this.agilidade = 0;
     }
 
-    public Avancado(String nome, int velocidade, int resistencia, int destreza, int impulsao, int jogoDeCabeca, int remate, int passe, String posicao, ArrayList<String> historial, int agilidade){
-        super(nome,velocidade,resistencia,destreza,impulsao,jogoDeCabeca,remate,passe,posicao,historial);
+    public Avancado(String nome, int numero, int velocidade, int resistencia, int destreza, int impulsao, int jogoDeCabeca, int remate, int passe, String posicao, ArrayList<String> historial, int agilidade){
+        super(nome,numero, velocidade,resistencia,destreza,impulsao,jogoDeCabeca,remate,passe,posicao,historial);
         this.agilidade = agilidade;
         this.setHabilidade(this.calculateHability());
     }
@@ -56,5 +55,19 @@ public class Avancado extends Jogador{
         Avancado a = (Avancado) o;
 
         return (super.equals(a) && this.agilidade == a.getAgilidade());
+    }
+    public static Avancado parse(String input){
+        String[] campos = input.split(",");
+        return new Avancado(campos[0], Integer.parseInt(campos[1]),
+                Integer.parseInt(campos[2]),
+                Integer.parseInt(campos[3]),
+                Integer.parseInt(campos[4]),
+                Integer.parseInt(campos[5]),
+                Integer.parseInt(campos[6]),
+                Integer.parseInt(campos[7]),
+                Integer.parseInt(campos[8]),
+                "Avancado",
+                new ArrayList<>(),
+                50);
     }
 }

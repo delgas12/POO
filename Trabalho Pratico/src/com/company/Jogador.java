@@ -54,7 +54,7 @@ public abstract class Jogador {
 
     public Jogador(Jogador j){
         this.nome = j.getNome();
-        this.numero = j.getNumero();
+        this.numero = j.getNumeroJogador();
         this.velocidade = j.getVelocidade();
         this.resistencia = j.getResistencia();
         this.destreza = j.getDestreza();
@@ -74,7 +74,7 @@ public abstract class Jogador {
         return this.nome;
     }
 
-    public int getNumero() {
+    public int getNumeroJogador() {
         return this.numero;
     }
 
@@ -124,7 +124,7 @@ public abstract class Jogador {
         this.nome = nome;
     }
 
-    public void setNumero(int numero){
+    public void setNumeroJogador(int numero){
         this.numero = numero;
     }
 
@@ -169,15 +169,19 @@ public abstract class Jogador {
     }
 
 
+    //
+    public void addEquipaToHistorial(String nome){
+        this.historial.add(nome);
+    }
     public String toString(){
-        return "\nEstatísticas do Jogador: \nNome: " + this.nome /*+
+        return "\nEstatísticas do Jogador: \nNome: " + this.nome + "\nHistorial: " + this.historial.toString(); /*+
                 "\nVelocidade: " + this.velocidade + "\nResistencia: " + this.resistencia +
                 "\nDestreza: " + this.destreza + "\nImpulsão: " + this.impulsao + "\nJogo De Cabeça: " + this.jogoDeCabeca +
                 "\nRemate: " + this.remate + "\nPasse: " + this.passe + "\nPosição: " + this.posicao + "\nHabilidade: " + this.habilidade +
-                "\nHistorial: " + this.historial.toString()
-                ;
-                 */
-                ;
+                "\nHistorial: " + this.historial.toString()*/
+
+
+
     }
 
     //clone
@@ -192,7 +196,7 @@ public abstract class Jogador {
 
         Jogador j = (Jogador) o;
 
-        return (this.nome.equals(j.getNome()) && this.numero == j.getNumero() && this.velocidade == j.getVelocidade() && this.resistencia == j.getResistencia() && this.destreza == j.getDestreza() &&
+        return (this.nome.equals(j.getNome()) && this.numero == j.getNumeroJogador() && this.velocidade == j.getVelocidade() && this.resistencia == j.getResistencia() && this.destreza == j.getDestreza() &&
                 this.impulsao == j.getImpulsao() && this.jogoDeCabeca == j.getJogoDeCabeca() && this.remate == j.getRemate() && this.passe == j.getPasse() &&
                 this.habilidade == j.getHabilidade() && this.posicao.equals(j.getPosicao()) && this.historial.equals(j.getHistorial()));
     }

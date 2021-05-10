@@ -9,94 +9,89 @@ import java.util.stream.Collectors;
 import static java.lang.Thread.sleep;
 
 public class Equipa implements Comparable<Equipa>{
-    String name;
-    private List<Jogador> titulares;
-    private List<Jogador> suplentes;
-
+    private String nome;
+    private List<Jogador> jogadores;
 
 
     public Equipa(){
         String name = "";
-        this.titulares = new ArrayList<>();
-        this.suplentes = new ArrayList<>();
+        this.jogadores = new ArrayList<>();
+    }
+
+    public Equipa(String name){
+        this.nome = name;
+        this.jogadores = new ArrayList<>();
     }
 
     public Equipa(Equipa e){
-        this.name = e.getName();
-        this.titulares = new ArrayList<>();
-        this.titulares.addAll(e.getTitulares());//quebras de encapsulamento
-        this.suplentes = new ArrayList<>();
-        this.suplentes.addAll(e.getTitulares());//quebras de encapsulamento
-    }
+        this.nome = e.getNome();
+        this.jogadores = new ArrayList<>();
+        this.jogadores = e.getJogadores();
 
-    public Equipa(String name, ArrayList<Jogador> titulares, ArrayList<Jogador> suplentes){
-        this.name = name;
-        this.titulares = copyList(titulares);
-        this.suplentes = copyList(suplentes);
+
     }
 
     //Getters
-    public String getName(){return this.name ; }
-
-    public List<Jogador> getTitulares() {
-        return this.titulares.stream().map(j -> j.clone()).collect(Collectors.toList());
+    public String getNome(){
+        return this.nome;
     }
 
-    public List<Jogador> getSuplentes() {
-        return this.titulares.stream().map(Jogador::clone).collect(Collectors.toList());
+    public List<Jogador> getJogadores() {
+        return this.jogadores.stream().map(Jogador::clone).collect(Collectors.toList());
     }
 
     //Setters
 
-    public void setSuplentes(List<Jogador> suplentes) {
-       this.suplentes = suplentes.stream().map(Jogador::clone).collect(Collectors.toList());
-    }
 
-    public void setTitulares(List<Jogador> titulares) {
-        this.titulares = titulares.stream().map(Jogador::clone).collect(Collectors.toList());
+    public void setJogadores(List<Jogador> jogadores) {
+        this.jogadores = jogadores.stream().map(Jogador::clone).collect(Collectors.toList());
     }
 
     public String toString() {
         return "Equipa{" +
-                "Nome: " + this.name +
-                "titulares=" + this.titulares.toString() +
-                ", suplentes=" + this.suplentes.toString() +
-                '}';
+                "Nome: " + this.nome +
+                "titulares=" + this.jogadores.toString() + "}";
     }
 
     //funçao que calcula a habilidade da equipa recorrendo ao calculo de uma media simples
     public int habilidadeEquipa(){
         int resultado = 0;
-        for(Jogador j : this.titulares){
+        for(Jogador j : this.jogadores){
             resultado += j.getHabilidade();
         }
-        return resultado/this.titulares.size();
+        return resultado/this.jogadores.size();
+    }
+    public static Equipa parse(String input){
+        String[] campos = input.split(",");
+        return new Equipa(campos[0]);
     }
 
-
+    public void insereJogador(Jogador j) {
+        jogadores.add(j.clone());
+    }
     /**
      *
      * @param nome  Nome do jogador a procurar
      * @return true caso o jogador tenha sido encontrado na equipa em questao, ou nos titulares ou nos suplentes
      */
-    public boolean encontraJogador(String nome){
-        boolean result1 = this.titulares.stream().anyMatch(jogador-> {      //recorrendo a uma stream, a funçao verifica a igualdade do nome de cada jogador com o nome fornecido
-            return jogador.getNome().equals(nome);
-        });
-        boolean result2 = this.suplentes.stream().anyMatch(jogador-> {
-            return jogador.getNome().equals(nome);
-        });
-        return result1 || result2;
+    /*
+    public boolean encontraJogador(int numero) {
+
+
+
+        return result1;
     }
+     */
 
-
+/*
     /**
      *
-     * @param nome  nome do jogador que se pretende remover
+     * @param name  nome do jogador que se pretende remover
      * @return      a funçao devolve o jogador que foi removido (para depois ser introduzido na equipa
      */
 
     //adicionar exceção caso o jogador nao exista
+    /*
     public Jogador removeJogador(String nome){
         Jogador resultado = null;
         Iterator<Jogador> itTitulares = titulares.iterator();
@@ -117,12 +112,13 @@ public class Equipa implements Comparable<Equipa>{
         }
         return resultado;
     }
+     */
 
     public int compareTo(Equipa b){
         //iguais -> 0
         //primeiro maior que o segundo -> > 0
         //segundo maior que o primeiro -> < 0
-        return this.getName().compareTo(b.getName());
+        return this.getNome().compareTo(b.getNome());
     }
 
 

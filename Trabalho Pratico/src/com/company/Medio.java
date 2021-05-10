@@ -11,8 +11,8 @@ public class Medio extends Jogador{
         this.recBola = 0;
     }
 
-    public Medio(String nome, int velocidade, int resistencia, int destreza, int impulsao, int jogoDeCabeca, int remate, int passe, String posicao, ArrayList<String> historial, int recBola){
-        super(nome,velocidade,resistencia,destreza,impulsao,jogoDeCabeca,remate,passe,posicao,historial);
+    public Medio(String nome, int numero ,int velocidade, int resistencia, int destreza, int impulsao, int jogoDeCabeca, int remate, int passe, int recBola, String posicao, ArrayList<String> historial){
+        super(nome, numero ,velocidade,resistencia,destreza,impulsao,jogoDeCabeca,remate,passe,posicao,historial);
         this.recBola = recBola;
         this.setHabilidade(this.calculateHability());
     }
@@ -54,6 +54,21 @@ public class Medio extends Jogador{
         Medio m = (Medio) o;
 
         return (super.equals(m) && this.recBola == m.getRecBola());
+    }
+
+    public static Medio parse(String input){
+        String[] campos = input.split(",");
+        return new Medio(campos[0], Integer.parseInt(campos[1]),
+                Integer.parseInt(campos[2]),
+                Integer.parseInt(campos[3]),
+                Integer.parseInt(campos[4]),
+                Integer.parseInt(campos[5]),
+                Integer.parseInt(campos[6]),
+                Integer.parseInt(campos[7]),
+                Integer.parseInt(campos[8]),
+                Integer.parseInt(campos[9]),
+                "Medio",
+                new ArrayList<>());
     }
 
 
