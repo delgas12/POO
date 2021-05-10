@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public abstract class Jogador {
     private String nome;
+    private int numero;
     private int velocidade;
     private int resistencia;
     private int destreza;
@@ -22,6 +23,7 @@ public abstract class Jogador {
 
     public Jogador() {
         this.nome = "";
+        this.numero = 0;
         this.velocidade = 0;
         this.resistencia = 0;
         this.destreza = 0;
@@ -34,9 +36,10 @@ public abstract class Jogador {
         this.historial = new ArrayList<>();
     }
 
-    public Jogador(String nome, int velocidade, int resistencia, int destreza, int impulsao, int jogoDeCabeca, int remate, int passe, String posicao, ArrayList<String> historial) {
+    public Jogador(String nome, int numero, int velocidade, int resistencia, int destreza, int impulsao, int jogoDeCabeca, int remate, int passe, String posicao, ArrayList<String> historial) {
         this.nome = nome;
         this.velocidade = velocidade;
+        this.numero = numero;
         this.resistencia = resistencia;
         this.destreza = destreza;
         this.impulsao = impulsao;
@@ -51,6 +54,7 @@ public abstract class Jogador {
 
     public Jogador(Jogador j){
         this.nome = j.getNome();
+        this.numero = j.getNumero();
         this.velocidade = j.getVelocidade();
         this.resistencia = j.getResistencia();
         this.destreza = j.getDestreza();
@@ -68,6 +72,10 @@ public abstract class Jogador {
 
     public String getNome() {
         return this.nome;
+    }
+
+    public int getNumero() {
+        return this.numero;
     }
 
     public int getVelocidade() {
@@ -114,6 +122,10 @@ public abstract class Jogador {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public void setNumero(int numero){
+        this.numero = numero;
     }
 
     public void setVelocidade(int velocidade) {
@@ -180,7 +192,7 @@ public abstract class Jogador {
 
         Jogador j = (Jogador) o;
 
-        return (this.nome.equals(j.getNome()) && this.velocidade == j.getVelocidade() && this.resistencia == j.getResistencia() && this.destreza == j.getDestreza() &&
+        return (this.nome.equals(j.getNome()) && this.numero == j.getNumero() && this.velocidade == j.getVelocidade() && this.resistencia == j.getResistencia() && this.destreza == j.getDestreza() &&
                 this.impulsao == j.getImpulsao() && this.jogoDeCabeca == j.getJogoDeCabeca() && this.remate == j.getRemate() && this.passe == j.getPasse() &&
                 this.habilidade == j.getHabilidade() && this.posicao.equals(j.getPosicao()) && this.historial.equals(j.getHistorial()));
     }

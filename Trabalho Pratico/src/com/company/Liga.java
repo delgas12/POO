@@ -74,7 +74,7 @@ public class Liga {
     public boolean transferencia (Equipa destino, String nome){
         Jogador transferido = null;
         Iterator<Map.Entry<String,Equipa>> it = equipas.entrySet().iterator();             //o iterador percorre a liga, equipa a equipa
-        ArrayList<Jogador> novo = new ArrayList<>();
+        List<Jogador> novo = new ArrayList<>();
         Equipa a;
         boolean removeu = false;
         while(it.hasNext() && !removeu){                            //enquanto o iterador nao tiver percorrido a liga até ao fim ou ainda nao tiver sido removido,

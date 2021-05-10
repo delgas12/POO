@@ -3,13 +3,15 @@ package com.company;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.lang.Thread.sleep;
 
 public class Equipa implements Comparable<Equipa>{
     String name;
-    private ArrayList<Jogador> titulares;
-    private ArrayList<Jogador> suplentes;
+    private List<Jogador> titulares;
+    private List<Jogador> suplentes;
 
 
 
@@ -36,23 +38,22 @@ public class Equipa implements Comparable<Equipa>{
     //Getters
     public String getName(){return this.name ; }
 
-    public ArrayList<Jogador> getTitulares() {
-        return copyList(this.titulares);
+    public List<Jogador> getTitulares() {
+        return this.titulares.stream().map(j -> j.clone()).collect(Collectors.toList());
     }
 
-    public ArrayList<Jogador> getSuplentes() {
-        return copyList(suplentes);
+    public List<Jogador> getSuplentes() {
+        return this.titulares.stream().map(Jogador::clone).collect(Collectors.toList());
     }
 
     //Setters
 
-    public void setSuplentes(ArrayList<Jogador> suplentes) {
-
-        this.suplentes = copyList(suplentes);
+    public void setSuplentes(List<Jogador> suplentes) {
+       this.suplentes = suplentes.stream().map(Jogador::clone).collect(Collectors.toList());
     }
 
-    public void setTitulares(ArrayList<Jogador> titulares) {
-        this.titulares = copyList(titulares);
+    public void setTitulares(List<Jogador> titulares) {
+        this.titulares = titulares.stream().map(Jogador::clone).collect(Collectors.toList());
     }
 
     public String toString() {
@@ -61,14 +62,6 @@ public class Equipa implements Comparable<Equipa>{
                 "titulares=" + this.titulares.toString() +
                 ", suplentes=" + this.suplentes.toString() +
                 '}';
-    }
-
-    public ArrayList<Jogador> copyList(ArrayList <Jogador> jogadores){
-        ArrayList<Jogador> newJogadores = new ArrayList<>(jogadores.size());
-        for (Jogador j : jogadores) {
-            newJogadores.add(j.clone());
-        }
-        return newJogadores;
     }
 
     //funçao que calcula a habilidade da equipa recorrendo ao calculo de uma media simples
