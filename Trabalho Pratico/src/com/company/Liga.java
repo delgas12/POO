@@ -4,12 +4,14 @@ import java.util.stream.Collectors;
 
 public class Liga {
     private Map<String,Equipa> equipas;
+    private Map<Integer,List<Jogador>> jogadoresSemEquipa;
     private List<Jogo> jogos;
     private int n_equipas;
 
 
     public Liga(){
-        ArrayList<Equipa> equipa = new ArrayList<>();
+        this.equipas = new TreeMap<>();
+        jogadoresSemEquipa = new TreeMap<>();
         this.n_equipas = 0;
     }
 
@@ -76,6 +78,23 @@ public class Liga {
     
     public Liga clone(){
         return new Liga(this);
+    }
+
+    public void addJogador(Jogador j){
+        //qual a posição
+        //habilidades
+        //nome
+        //numero
+        if(this.jogadoresSemEquipa.containsKey(j.getNumeroJogador())){
+            List<Jogador> jg = this.jogadoresSemEquipa.get(j.getNumeroJogador());
+            jg.add(j.clone());
+            this.jogadoresSemEquipa.put(j.getNumeroJogador(),jg);
+        }
+        else{
+            List<Jogador> jg = new ArrayList<>();
+            jg.add(j.clone());
+            this.jogadoresSemEquipa.put(j.getNumeroJogador(),jg);
+        }
     }
 
  /*

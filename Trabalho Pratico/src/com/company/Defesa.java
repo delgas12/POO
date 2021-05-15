@@ -11,7 +11,7 @@ public class Defesa extends Jogador{
         this.forca = 0;
     }
 
-    public Defesa(String nome, int numero ,int velocidade, int resistencia, int destreza, int impulsao, int jogoDeCabeca, int remate, int passe, String posicao, ArrayList<String> historial, int forca){
+    public Defesa(String nome, int numero ,int velocidade, int resistencia, int destreza, int impulsao, int jogoDeCabeca, int remate, int passe, int forca,String posicao, ArrayList<String> historial){
         super(nome,numero,velocidade,resistencia,destreza,impulsao,jogoDeCabeca,remate,passe,posicao,historial);
         this.forca = forca;
         this.setHabilidade(this.calculateHability());
@@ -67,9 +67,10 @@ public class Defesa extends Jogador{
                 Integer.parseInt(campos[6]),
                 Integer.parseInt(campos[7]),
                 Integer.parseInt(campos[8]),
+                50,
                 "Defesa",
-                new ArrayList<>(),
-                50);
+                new ArrayList<>()
+                );
     }
 
 }

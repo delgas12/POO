@@ -20,7 +20,6 @@ public abstract class Jogador {
     public abstract  int calculateHability();
 
     //Construtores
-
     public Jogador() {
         this.nome = "";
         this.numero = 0;
