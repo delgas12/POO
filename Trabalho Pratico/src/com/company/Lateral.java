@@ -69,4 +69,9 @@ public class Lateral extends Jogador{
                 new ArrayList<>());
     }
 
+    public int compareTo(Lateral l){
+        return super.compareTo(l);
+    }
+
+
 }

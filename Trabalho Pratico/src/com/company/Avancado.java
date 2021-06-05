@@ -72,4 +72,8 @@ public class Avancado extends Jogador{
                 new ArrayList<>()
                 );
     }
+
+    public int compareTo(Jogador j){
+        return super.compareTo(j);
+    }
 }

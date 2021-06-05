@@ -71,5 +71,9 @@ public class Medio extends Jogador{
                 new ArrayList<>());
     }
 
+    public int compareTo(Jogador j){
+        return super.compareTo(j);
+    }
+
 
 }

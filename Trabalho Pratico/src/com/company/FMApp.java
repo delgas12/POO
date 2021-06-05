@@ -18,7 +18,7 @@ public class FMApp {
 
         Liga l = new Liga();
 
-        String[] s = {"**** FM_APP ****\n", "Adicionar Jogador", "Adicionar Equipa", "Mudar Jogador de Equipa", "Consultar Equipa", "Consultar Jogador", "Carregar Estado De Um Ficheiro"};
+        String[] s = {"**** FM_APP ****\n", "Adicionar Jogador", "Adicionar Equipa", "Mudar Jogador de Equipa", "Consultar Equipa", "Consultar Jogador", "Calcular Habilidade Jogador", "Calcular Habilidade Equipa", "Carregar Estado De Um Ficheiro"};
         Menu start = new Menu(s);
         Jogador j;
         String jogadorConsultar = "";
@@ -51,7 +51,7 @@ public class FMApp {
                     break;
                 case 2:
                     equipa = FMView.getEquipa();
-                    l.adicionaEquipa(equipa);
+                    l.criaEquipa(equipa);
                     //System.out.println(l.getEquipa(equipa));
                     break;
                 case 3:
@@ -90,6 +90,34 @@ public class FMApp {
                     }
                     break;
                 case 6:
+                    String jogadorHabilidade = FMView.getPlayerForHability();
+                    try{
+                        FMView.mostraHabilidade(l.consultaJogador(jogadorHabilidade).getHabilidade());
+                    }
+                    catch(JogadorNaoExiste e){
+                        System.out.println(e.getMessage());
+                    }
+                    break;
+                case 7:
+                    equipa = FMView.calculaHabilidade();
+                    try{
+                        Equipa procura = l.getEquipa(equipa);
+                        int habilidade = procura.calculaHabilidadeEquipa();
+                        String tatica = "";
+                        if (habilidade == 0){
+                            tatica = FMView.pedeAlinhamento();
+                            String[] posicoes = tatica.split("-");
+                            procura.criaInicial(Integer.parseInt(posicoes[0]), Integer.parseInt(posicoes[1]), Integer.parseInt(posicoes[2]), Integer.parseInt(posicoes[3]));
+                            procura.calculaHabilidadeEquipa();
+                            l.adicionaEquipa(procura);
+                        }
+                        FMView.displayHabilidadeEquipa(procura.getHabilidade());
+                    }
+                    catch (EquipaNaoExisteException | InsufficientPlayers e){
+                        System.out.println(e.getMessage());
+                    }
+                    break;
+                case 8:
                     Parser p;
                     try {
                         System.out.println("correu");
@@ -101,7 +129,7 @@ public class FMApp {
                         //System.out.println(l.getEquipa("Mendelssohn F. C."));
                         //System.out.println(l.getJogos());
                     }
-                    catch (LinhaIncorretaException e) {
+                    catch (LinhaIncorretaException | InsufficientPlayers e) {
                         System.out.println(e.getMessage());
                     }
                     break;
@@ -109,7 +137,5 @@ public class FMApp {
                     break;
             }
         }
-
-
     }
 }

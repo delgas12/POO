@@ -2,7 +2,7 @@ package com.company;
 
 import java.util.ArrayList;
 
-public abstract class Jogador {
+public abstract class Jogador implements Comparable<Jogador>{
     private String nome;
     private int numero;
     private int velocidade;
@@ -173,10 +173,10 @@ public abstract class Jogador {
         this.historial.add(nome);
     }
     public String toString(){
-        return "\nEstatísticas do Jogador: \nNome: " + this.nome + "\nHistorial: " + this.historial.toString(); /*+
+        return "\nEstatísticas do Jogador: \nNome: " + this.nome + "\nHistorial: " + this.historial.toString() +"\nHabilidade: " +this.habilidade /*+
                 "\nVelocidade: " + this.velocidade + "\nResistencia: " + this.resistencia +
                 "\nDestreza: " + this.destreza + "\nImpulsão: " + this.impulsao + "\nJogo De Cabeça: " + this.jogoDeCabeca +
-                "\nRemate: " + this.remate + "\nPasse: " + this.passe + "\nPosição: " + this.posicao + "\nHabilidade: " + this.habilidade +
+                "\nRemate: " + this.remate + "\nPasse: " + this.passe*/ + "\nPosição: " + this.posicao; /*+ "\nHabilidade: " + this.habilidade +
                 "\nHistorial: " + this.historial.toString()*/
     }
 
@@ -197,6 +197,7 @@ public abstract class Jogador {
                 this.habilidade == j.getHabilidade() && this.posicao.equals(j.getPosicao()) && this.historial.equals(j.getHistorial()));
     }
 
-
-
+    public int compareTo(Jogador j){
+        return (this.getHabilidade() - j.getHabilidade());
+    }
 }

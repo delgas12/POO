@@ -73,4 +73,9 @@ public class Defesa extends Jogador{
                 );
     }
 
+    public int compareTo(Jogador j){
+      return super.compareTo(j);
+    }
+
+
 }

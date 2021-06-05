@@ -102,10 +102,14 @@ public class Liga {
         }
     }
 
-    public void adicionaEquipa(String equipa) {
+    public void criaEquipa(String equipa) {
         Equipa nova = new Equipa(equipa);
         this.n_equipas++;
         this.equipas.put(equipa, nova);
+    }
+
+    public void adicionaEquipa(Equipa equipa){
+        this.equipas.put(equipa.getNome(), equipa.clone());
     }
 
     public String equipasToString(){

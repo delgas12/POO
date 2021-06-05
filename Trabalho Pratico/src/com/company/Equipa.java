@@ -9,25 +9,30 @@ import static java.lang.Thread.sleep;
 public class Equipa implements Comparable<Equipa>{
     private String nome;
     private Map<Integer, Jogador> jogadores;
-
+    private List<Jogador> titulares;
+    private int habilidade;
 
 
     public Equipa(){
-        String name = "";
+        this.nome = "";
         this.jogadores = new HashMap<>();
+        this.titulares = new ArrayList<>();
+        this.habilidade = 0;
     }
 
     public Equipa(String name){
         this.nome = name;
         this.jogadores = new HashMap<>();
+        this.titulares = new ArrayList<>();
+        this.habilidade = 0;
     }
 
     public Equipa(Equipa e){
         this.nome = e.getNome();
         this.jogadores = new HashMap<>();
         this.jogadores = e.getJogadores();
-
-
+        this.titulares = e.getTitulares();
+        this.habilidade = e.getHabilidade();
     }
 
     //Getters
@@ -42,6 +47,14 @@ public class Equipa implements Comparable<Equipa>{
     public Jogador getJogadorEquipa(Jogador procura) throws JogadorNaoExiste {
         if (!this.jogadores.containsKey(procura.getNumeroJogador())) throw new JogadorNaoExiste("Jogador não existe nesta equipa");
         return this.jogadores.get(procura.getNumeroJogador());
+    }
+
+    public List<Jogador> getTitulares(){
+        return this.titulares.stream().map(Jogador::clone).collect(Collectors.toList());
+    }
+
+    public int getHabilidade(){
+        return this.habilidade;
     }
 
     //Setters
@@ -98,7 +111,8 @@ public class Equipa implements Comparable<Equipa>{
     public String toString() {
         return "Equipa{" +
                 "Nome: " + this.nome +
-                "titulares=" + this.jogadores.toString() + "}";
+                "\n\nJogadores =\n\n" + this.jogadores.toString() +
+                "\n\n\n\ntitulares =" + this.titulares.toString() + "}";
     }
 
     public int compareTo(Equipa b){
@@ -108,6 +122,46 @@ public class Equipa implements Comparable<Equipa>{
         return this.getNome().compareTo(b.getNome());
     }
 
+    public int calculaHabilidadeEquipa (){
+        int habilidadeCumulativa = this.titulares.stream().mapToInt(j -> j.getHabilidade()).sum();
+        this.habilidade = habilidadeCumulativa/11;
+        return (habilidadeCumulativa/11);
+    }
+
+
+
+    public void criaInicial (int nDefesas , int nLaterais,int nMedios, int nAvancados) throws InsufficientPlayers{
+        int total = nDefesas + nLaterais + nMedios + nAvancados;
+        if (total != 10) throw new InsufficientPlayers("Número de jogadores diferente de 11");
+        List<Jogador> result = new ArrayList<>();
+        int counter = 0;
+        Jogador grTeam = this.jogadores.values().stream().filter(j -> j instanceof GuardaRedes).findFirst().orElse(null);
+        result.add(grTeam.clone());
+        List <Jogador> defesas = this.jogadores.values().stream().filter(j -> j instanceof Defesa).map(Jogador::clone).sorted().collect(Collectors.toList());
+        List <Jogador> laterais = this.jogadores.values().stream().filter(j -> j instanceof Lateral).map(Jogador::clone).sorted().collect(Collectors.toList());
+        List <Jogador> medios = this.jogadores.values().stream().filter(j -> j instanceof Medio).map(Jogador::clone).sorted().collect(Collectors.toList());
+        List <Jogador> avancados = this.jogadores.values().stream().filter(j -> j instanceof Avancado).map(Jogador::clone).sorted().collect(Collectors.toList());
+        for(counter = 0 ; counter < nDefesas &&  counter < defesas.size(); counter++) {
+            result.add(defesas.get(counter));
+        }
+        if(counter < 2) throw new InsufficientPlayers("Há Defesas em falta");
+        counter = 0;
+        for (;counter < laterais.size() && counter < nLaterais ; counter++){
+            result.add(laterais.get(counter));
+        }
+        if(counter < 2) throw new InsufficientPlayers("Há Laterais em falta");
+        counter = 0;
+        for (  ;counter < medios.size() && counter < nMedios; counter++){
+            result.add(medios.get(counter));
+        }
+        if(counter < 2) throw new InsufficientPlayers("Há Medios em falta");
+        counter = 0;
+        for (; counter < nAvancados && counter < avancados.size(); counter++){
+            result.add(avancados.get(counter));
+        }
+        if(counter < 3) throw new InsufficientPlayers("Há Avançados em falta");
+        this.titulares = result;
+    }
 
     public Equipa clone(){
         return new Equipa(this);

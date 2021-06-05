@@ -97,4 +97,37 @@ public class FMView {
     public static void displayJogador(Jogador j){
         System.out.println(j.toString());
     }
+
+    public static String getPlayerForHability(){
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Insira o nome do jogador para o qual pretende calcular a habilidade : ");
+        return sc.nextLine();
+    }
+
+    public static void mostraHabilidade(int habilidade){
+        System.out.println("O Jogador tem habilidade: " + habilidade);
+    }
+
+    public static String calculaHabilidade(){
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Insira o nome da Equipa cuja Habilidade quer consultar");
+        return sc.nextLine();
+    }
+
+    public static String pedeAlinhamento(){
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Quantos Defesas?");
+        String defesas = sc.nextLine();
+        System.out.println("Quantos Laterais?");
+        String laterais = sc.nextLine();
+        System.out.println("Quantos Médios?");
+        String medios = sc.nextLine();
+        System.out.println("Quantos Avançados?");
+        String avancados = sc.nextLine();
+        return defesas + "-" + laterais + "-" + medios + "-" + avancados;
+    }
+
+    public static void displayHabilidadeEquipa(int habilidade){
+        System.out.println("A habilidade da equipa é: " + habilidade);
+    }
 }
