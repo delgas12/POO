@@ -4,14 +4,12 @@ import java.util.stream.Collectors;
 
 public class Liga {
     private Map<String,Equipa> equipas;
-    private Map<Integer,List<Jogador>> jogadoresSemEquipa;
     private List<Jogo> jogos;
     private int n_equipas;
 
 
     public Liga(){
         this.equipas = new TreeMap<>();
-        jogadoresSemEquipa = new TreeMap<>();
         this.n_equipas = 0;
     }
 
@@ -34,8 +32,10 @@ public class Liga {
         this.n_equipas = l.getN_equipas();
     }
 
-    public Equipa getEquipa(String nome){
-        return this.equipas.get(nome);
+    public Equipa getEquipa(String nome) throws EquipaNaoExisteException{
+        Equipa eq = this.equipas.get(nome);
+        if (eq == null) throw new EquipaNaoExisteException("Equipa não existe");
+        return eq;
     }
 
 
@@ -55,7 +55,14 @@ public class Liga {
     public List<Jogo> getJogos(){
         return this.jogos.stream().map(Jogo::clone).collect(Collectors.toList());
     }
-    
+
+    public Jogador getJogadorLiga(String equipa, Jogador procura) throws JogadorNaoExiste{
+        Jogador result = this.equipas.get(equipa).getJogadorEquipa(procura);
+        if ( result == null) throw new JogadorNaoExiste("Jogador não existe");
+        else return result;
+    }
+
+
     //Setters
     public void setJogos(List<Jogo> j){
         this.jogos = j.stream().map(jogo -> jogo.clone()).collect(Collectors.toList());
@@ -80,61 +87,27 @@ public class Liga {
         return new Liga(this);
     }
 
-    public void addJogador(Jogador j){
+    public void addJogador(Jogador j, String teamName) throws EquipaNaoExisteException, NumeroNaoDisponivel{
         //qual a posição
         //habilidades
         //nome
         //numero
-        if(this.jogadoresSemEquipa.containsKey(j.getNumeroJogador())){
-            List<Jogador> jg = this.jogadoresSemEquipa.get(j.getNumeroJogador());
-            jg.add(j.clone());
-            this.jogadoresSemEquipa.put(j.getNumeroJogador(),jg);
+        if(this.equipas.containsKey(teamName)){
+            Equipa equipa = this.equipas.get(teamName);
+            j.addEquipaToHistorial(teamName);
+            equipa.insereJogador(j);
         }
         else{
-            List<Jogador> jg = new ArrayList<>();
-            jg.add(j.clone());
-            this.jogadoresSemEquipa.put(j.getNumeroJogador(),jg);
+            throw new EquipaNaoExisteException("Equipa não existe.");
         }
     }
 
- /*
-    /**
-     *
-     * @param destino equipa para o qual o jogador selecionado será transferido
-     * @param nome  Nome do jogador a transferir no formato String
-     * @return
-     */
-    /*
-
-    public boolean transferencia (Equipa destino, String nome) throws JogadorNaoExiste{
-        Jogador transferido = null;
-        Iterator<Map.Entry<String,Equipa>> it = equipas.entrySet().iterator();             //o iterador percorre a liga, equipa a equipa
-        List<Jogador> novo = new ArrayList<>();
-        Equipa a;
-        boolean removeu = false;
-        while(it.hasNext() && !removeu){//enquanto o iterador nao tiver percorrido a liga até ao fim ou ainda nao tiver sido removido,
-            a = it.next().getValue();
-            if (a.encontraJogador(nome)){
-                transferido = a.removeJogador(nome);
-                removeu = true;
-            }
-        }
-        if (removeu){
-            if (destino.getTitulares().size() == 11) {
-                novo = destino.getSuplentes();
-                novo.add(transferido);
-                destino.setSuplentes(novo);
-            }
-            else {
-                novo = destino.getTitulares();
-                novo.add(transferido);
-                destino.setTitulares(novo);
-            }
-        }
-        if(!removeu) throw new JogadorNaoExiste("Jogador Não Existe em nenhuma equipa!\n");
-        return removeu;
+    public void adicionaEquipa(String equipa) {
+        Equipa nova = new Equipa(equipa);
+        this.n_equipas++;
+        this.equipas.put(equipa, nova);
     }
-     */
+
     public String equipasToString(){
         Iterator<Map.Entry<String,Equipa>> it = equipas.entrySet().iterator();
         StringBuilder equipas = new StringBuilder("Equipas");
@@ -144,11 +117,32 @@ public class Liga {
         }
         return equipas.toString();
     }
-/*
-    public Jogador consultaJogador(String ){
-
+                                    //<Jogador, <equipaOrigem, equipaDestino>>
+    public void transferencia(Map.Entry<String,Map.Entry<String, String>> transf) throws EquipaNaoExisteException , JogadorNaoExiste, NumeroNaoDisponivel {
+        String jogador = transf.getKey();
+        String equipaOrigem = transf.getValue().getKey();
+        String equipaDestino = transf.getValue().getValue();
+        Equipa equipaO, equipaD;
+        Jogador jog;
+        if ((equipaO = this.equipas.get(equipaOrigem)) == null) throw new EquipaNaoExisteException("Equipa Origem não existe");
+        if ((jog = equipaO.procuraJogador(jogador)) == null) throw new JogadorNaoExiste ("Jogador não existe na equipa origem");
+        if ((equipaD = this.equipas.get(equipaDestino)) == null) throw new EquipaNaoExisteException("Equipa Destino não existe");
+        equipaO.removeJogador(jog);
+        equipaD.insereJogadorTransferencia(jog);
     }
-*/
+
+    public Jogador consultaJogador(String nome) throws JogadorNaoExiste{
+        Iterator<Equipa> it = this.equipas.values().iterator();
+        boolean encontrou = false;
+        Jogador result = null;
+        while(!encontrou && it.hasNext()){
+            result = it.next().procuraJogador(nome);
+            if (result != null ) encontrou = true;
+        }
+        if (result == null) throw new JogadorNaoExiste("Jogador não existe");
+        return result;
+    }
+
     public String toString(){
         return "Liga: { " +
                 "Equipas: " + this.equipas.toString() +

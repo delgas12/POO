@@ -1,31 +1,30 @@
 package com.company;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.lang.Thread.sleep;
 
 public class Equipa implements Comparable<Equipa>{
     private String nome;
-    private List<Jogador> jogadores;
+    private Map<Integer, Jogador> jogadores;
+
 
 
     public Equipa(){
         String name = "";
-        this.jogadores = new ArrayList<>();
+        this.jogadores = new HashMap<>();
     }
 
     public Equipa(String name){
         this.nome = name;
-        this.jogadores = new ArrayList<>();
+        this.jogadores = new HashMap<>();
     }
 
     public Equipa(Equipa e){
         this.nome = e.getNome();
-        this.jogadores = new ArrayList<>();
+        this.jogadores = new HashMap<>();
         this.jogadores = e.getJogadores();
 
 
@@ -36,83 +35,71 @@ public class Equipa implements Comparable<Equipa>{
         return this.nome;
     }
 
-    public List<Jogador> getJogadores() {
-        return this.jogadores.stream().map(Jogador::clone).collect(Collectors.toList());
+    public Map<Integer,Jogador> getJogadores() {
+        return this.jogadores.values().stream().collect(Collectors.toMap(Jogador::getNumeroJogador, Jogador::clone));
+    }
+
+    public Jogador getJogadorEquipa(Jogador procura) throws JogadorNaoExiste {
+        if (!this.jogadores.containsKey(procura.getNumeroJogador())) throw new JogadorNaoExiste("Jogador não existe nesta equipa");
+        return this.jogadores.get(procura.getNumeroJogador());
     }
 
     //Setters
 
 
-    public void setJogadores(List<Jogador> jogadores) {
-        this.jogadores = jogadores.stream().map(Jogador::clone).collect(Collectors.toList());
+    public void setJogadores(Map<Integer,Jogador> jogadores) {
+        this.jogadores = jogadores.values().stream().collect(Collectors.toMap(Jogador::getNumeroJogador, Jogador::clone));
     }
+
+    //funçao que calcula a habilidade da equipa recorrendo ao calculo de uma media simples
+    public int habilidadeEquipa(){
+        int resultado = 0;
+        for(Jogador j : this.jogadores.values()){
+            resultado += j.getHabilidade();
+        }
+        return resultado/this.jogadores.size();
+    }
+
+    public static Equipa parse(String input){
+        String[] campos = input.split(",");
+        return new Equipa(campos[0]);
+    }
+
+    public void insereJogador(Jogador j){
+        this.jogadores.put(j.getNumeroJogador(),j.clone());
+    }
+
+    public void insereJogadorTransferencia(Jogador j) throws NumeroNaoDisponivel{
+        boolean result = true;
+        int num = j.getNumeroJogador();;
+        while (this.jogadores.containsKey(num)){
+            if (num == 99) num = 1;
+            else num++;
+            result = false;
+        }
+        if(!result){
+            j.setNumeroJogador(num);
+            j.addEquipaToHistorial(this.getNome());
+            this.jogadores.put(j.getNumeroJogador(),j.clone());
+            throw new NumeroNaoDisponivel("Jogador inserido com novo numero : " + num);
+        }
+        this.jogadores.put(j.getNumeroJogador(),j.clone());
+    }
+
+    public void removeJogador(Jogador j) throws JogadorNaoExiste{
+        if (this.jogadores.remove(j.getNumeroJogador()) == null) throw new JogadorNaoExiste("Jogador não existe na equipa destino");
+    }
+
+    public Jogador procuraJogador(String nome){
+        return this.jogadores.values().stream().filter(j -> j.getNome().equals(nome)).findFirst().orElse(null);
+    }
+
 
     public String toString() {
         return "Equipa{" +
                 "Nome: " + this.nome +
                 "titulares=" + this.jogadores.toString() + "}";
     }
-
-    //funçao que calcula a habilidade da equipa recorrendo ao calculo de uma media simples
-    public int habilidadeEquipa(){
-        int resultado = 0;
-        for(Jogador j : this.jogadores){
-            resultado += j.getHabilidade();
-        }
-        return resultado/this.jogadores.size();
-    }
-    public static Equipa parse(String input){
-        String[] campos = input.split(",");
-        return new Equipa(campos[0]);
-    }
-
-    public void insereJogador(Jogador j) {
-        jogadores.add(j.clone());
-    }
-    /**
-     *
-     * @param nome  Nome do jogador a procurar
-     * @return true caso o jogador tenha sido encontrado na equipa em questao, ou nos titulares ou nos suplentes
-     */
-    /*
-    public boolean encontraJogador(int numero) {
-
-
-
-        return result1;
-    }
-     */
-
-/*
-    /**
-     *
-     * @param name  nome do jogador que se pretende remover
-     * @return      a funçao devolve o jogador que foi removido (para depois ser introduzido na equipa
-     */
-
-    //adicionar exceção caso o jogador nao exista
-    /*
-    public Jogador removeJogador(String nome){
-        Jogador resultado = null;
-        Iterator<Jogador> itTitulares = titulares.iterator();
-        Iterator<Jogador> itSuplentes = suplentes.iterator();
-        Jogador j = itTitulares.next();
-        while(itTitulares.hasNext() && !(j.getNome().equals(nome))) j = itTitulares.next(); //o ciclo percorre o arraylist recorrendo ao iterador itTitulares
-        if(j.getNome().equals(nome)){                                                       //no fim, caso o jogador esteja no arraylist titulares, clona o jogador em questao para o jogador resultado
-            resultado = j.clone();                                                          //remove o jogador em questao
-            itTitulares.remove();
-        }
-        if(itSuplentes.hasNext()){                                                          //caso exista suplentes, a funçao realiza um processo analogo ao descrtio acima, mas para o arrayList suplentes
-            j = itSuplentes.next();
-            while(itSuplentes.hasNext() && !(j.getNome().equals(nome))) j = itSuplentes.next();
-            if(j.getNome().equals(nome)){
-                resultado = j.clone();
-                itSuplentes.remove();
-            }
-        }
-        return resultado;
-    }
-     */
 
     public int compareTo(Equipa b){
         //iguais -> 0

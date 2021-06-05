@@ -6,10 +6,9 @@ import java.util.List;
 import java.util.TreeMap;
 
 public class Main {
-
+/*
         //Jogador(String nome, int velocidade, int resistencia, int destreza, int impulsao, int jogoDeCabeca, int remate, int passe, String posicao, ArrayList<String> historial) {
     public static void main (String args[]){
-        /*
         Parser p;
         try {
             System.out.println("correu");
@@ -25,8 +24,8 @@ public class Main {
         catch (LinhaIncorretaException e) {
             System.out.println(e.getMessage());
         }
+        /*
         Liga l = new Liga();
-        */
         String[] s1 = {"Inicio", "Adicionar Equipas" , "adicionar Jogadores"};
         Menu start = new Menu(s1);
         start.execute();
@@ -35,4 +34,5 @@ public class Main {
 
 
     }
+ */
 }

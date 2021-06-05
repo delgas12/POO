@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.jar.JarOutputStream;
 import java.util.stream.Collectors;
 
 public class Parser {
@@ -15,8 +14,8 @@ public class Parser {
     private Map<String, Equipa> equipas; //armazena a lista de equipas
     private  List<Jogo> jogos;
 
-    public void parse() throws LinhaIncorretaException{
-        List<String> linhas = lerFicheiro("logs.txt");
+    public void parse() throws LinhaIncorretaException {
+        List<String> linhas = lerFicheiro("POO/logs.txt");
         this.equipas = new HashMap<>(); //nome, equipa
         Map<Integer, Jogador> jogadores = new HashMap<>(); //numero, jogador
         this.jogos = new ArrayList<>();
@@ -83,11 +82,6 @@ public class Parser {
             System.out.println(jog.toString());
         }
         */
-        for(Map.Entry<Integer,Jogador>  jog : jogadores.entrySet()){
-            System.out.println("Numero: " + jog.getKey() + " Nome: " + jog.getValue().getNome());
-        }
-
-
     }
 
     public static List<String> lerFicheiro(String nomeFich) {

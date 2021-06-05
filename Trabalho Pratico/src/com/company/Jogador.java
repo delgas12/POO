@@ -178,9 +178,6 @@ public abstract class Jogador {
                 "\nDestreza: " + this.destreza + "\nImpulsão: " + this.impulsao + "\nJogo De Cabeça: " + this.jogoDeCabeca +
                 "\nRemate: " + this.remate + "\nPasse: " + this.passe + "\nPosição: " + this.posicao + "\nHabilidade: " + this.habilidade +
                 "\nHistorial: " + this.historial.toString()*/
-
-
-
     }
 
     //clone
@@ -199,6 +196,7 @@ public abstract class Jogador {
                 this.impulsao == j.getImpulsao() && this.jogoDeCabeca == j.getJogoDeCabeca() && this.remate == j.getRemate() && this.passe == j.getPasse() &&
                 this.habilidade == j.getHabilidade() && this.posicao.equals(j.getPosicao()) && this.historial.equals(j.getHistorial()));
     }
+
 
 
 }
