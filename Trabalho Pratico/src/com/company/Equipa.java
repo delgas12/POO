@@ -128,6 +128,12 @@ public class Equipa implements Comparable<Equipa>{
         return (habilidadeCumulativa/11);
     }
 
+    public void adicionaTitularesEquipa(List<Integer> titulares){
+        for (Integer i : titulares){
+            this.titulares.add(this.jogadores.get(i));
+        }
+    }
+
 
 
     public void criaInicial (int nDefesas , int nLaterais,int nMedios, int nAvancados) throws InsufficientPlayers{

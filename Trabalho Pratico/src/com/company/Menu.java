@@ -10,7 +10,7 @@ public class Menu {
     private List<String> options ;
     private int op;
 
-    public Menu(String[] options ){
+    public Menu(String[] options){
         this.options = Arrays.asList(options);
         this.op = 0;
     }

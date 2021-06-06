@@ -5,19 +5,34 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Jogo {
-    private String equipaCasa;
-    private String equipaFora;
+    private String nomeEquipaCasa;
+    private String nomeEquipaFora;
     private int golosCasa;
     private int golosFora;
     private LocalDate date;
     private List<Integer> jogadoresCasa;
     private List<Integer> jogadoresFora;
-    Map<Integer, Integer> substituicoesCasa = new HashMap<>();
-    Map<Integer, Integer> substituicoesFora = new HashMap<>();
+    private Equipa equipaCasa;
+    private Equipa equipaFora;
+    Map<Integer, Integer> substituicoesCasa;
+    Map<Integer, Integer> substituicoesFora;
+
+    public Jogo(){
+        nomeEquipaCasa = "";
+        nomeEquipaFora = "";
+        golosCasa = 0;
+        golosFora = 0;
+        jogadoresCasa = new ArrayList<>();
+        jogadoresFora = new ArrayList<>();
+        equipaCasa = new Equipa();
+        equipaFora = new Equipa();
+        substituicoesCasa = new HashMap<>();
+        substituicoesFora = new HashMap<>();
+    }
 
     public Jogo (String ec, String ef, int gc, int gf, LocalDate d,  List<Integer> jc, Map<Integer, Integer> sc,  List<Integer> jf, Map<Integer, Integer> sf){
-        equipaCasa = ec;
-        equipaFora = ef;
+        nomeEquipaCasa = ec;
+        nomeEquipaFora = ef;
         golosCasa = gc;
         golosFora = gf;
         date = d;
@@ -28,24 +43,23 @@ public class Jogo {
     }
 
     public Jogo(Jogo j){
-        this.equipaCasa = j.getEquipaCasa();
-        this.equipaFora = j.getEquipaFora();
+        this.nomeEquipaCasa = j.getNomeEquipaCasa();
+        this.nomeEquipaFora = j.getNomeEquipaFora();
         this.golosCasa = j.getGolosCasa();
         this.golosFora = j.getGolosFora();
         this.jogadoresCasa = j.getJogadoresCasa();
         this.jogadoresFora = j.getJogadoresFora();
         this.substituicoesCasa = j.getSubstituicoesCasa();
         this.substituicoesFora = j.getSubstituicoesFora();
-
     }
 
 
-    public String getEquipaCasa() {
-        return equipaCasa;
+    public String getNomeEquipaCasa() {
+        return this.nomeEquipaCasa;
     }
 
-    public String getEquipaFora() {
-        return this.equipaFora;
+    public String getNomeEquipaFora() {
+        return this.nomeEquipaFora;
     }
 
     public int getGolosCasa() {
@@ -67,13 +81,36 @@ public class Jogo {
     public List<Integer> getJogadoresFora() {
         return new ArrayList<>(this.jogadoresFora);
     }
+    public Equipa getEquipaCasa(){
+        return this.equipaCasa.clone();
+    }
 
+    public Equipa getEquipaFora(){
+        return this.equipaCasa.clone();
+    }
     public Map<Integer, Integer> getSubstituicoesCasa() {
         return new HashMap<>(this.substituicoesCasa);
     }
 
     public Map<Integer, Integer> getSubstituicoesFora() {
         return new HashMap<>(this.substituicoesFora);
+    }
+
+    //setters
+    public void setEquipaCasa(Equipa casa){
+        this.equipaCasa = new Equipa(casa);
+    }
+
+    public void setEquipaFora(Equipa fora){
+        this.equipaCasa = new Equipa(fora);
+    }
+
+    public void setJogadoresCasa(List<Integer> jogCasa){
+        this.jogadoresCasa = new ArrayList<>(jogCasa);
+    }
+
+    public void setJogadoresFora(List<Integer> jogFora){
+        this.jogadoresFora = new ArrayList<>(jogFora);
     }
 
     public static Jogo parse(String input){
@@ -103,7 +140,7 @@ public class Jogo {
     }
 
     public String toString() {
-        return  "Jogo:" + equipaCasa + " - " + equipaFora
+        return  "Jogo:" + this.nomeEquipaCasa + " - " + this.nomeEquipaFora
         + " ; " + subsToString(substituicoesCasa) + " ; " + subsToString(substituicoesFora) + "\n";
     }
 
@@ -124,5 +161,14 @@ public class Jogo {
     public Jogo clone(){
         return new Jogo(this);
     }
+
+    public void adicionaTitularesCasaJogo(){
+        this.equipaCasa.adicionaTitularesEquipa(this.jogadoresCasa);
+    }
+
+    public void adicionaTitularesForaJogo(){
+        this.equipaFora.adicionaTitularesEquipa(this.jogadoresFora);
+    }
+    
 
 }

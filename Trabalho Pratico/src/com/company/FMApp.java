@@ -1,6 +1,7 @@
 package com.company;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 // Wagner Athletic
@@ -18,7 +19,7 @@ public class FMApp {
 
         Liga l = new Liga();
 
-        String[] s = {"**** FM_APP ****\n", "Adicionar Jogador", "Adicionar Equipa", "Mudar Jogador de Equipa", "Consultar Equipa", "Consultar Jogador", "Calcular Habilidade Jogador", "Calcular Habilidade Equipa", "Carregar Estado De Um Ficheiro"};
+        String[] s = {"**** FM_APP ****\n", "Adicionar Jogador", "Adicionar Equipa", "Mudar Jogador de Equipa", "Consultar Equipa", "Consultar Jogador", "Calcular Habilidade Jogador", "Calcular Habilidade Equipa","Jogo","Carregar Estado De Um Ficheiro"};
         Menu start = new Menu(s);
         Jogador j;
         String jogadorConsultar = "";
@@ -118,6 +119,10 @@ public class FMApp {
                     }
                     break;
                 case 8:
+                    //chamar o metodo do jogo
+                    menuJogo(l);
+                    break;
+                case 9:
                     Parser p;
                     try {
                         System.out.println("correu");
@@ -137,5 +142,67 @@ public class FMApp {
                     break;
             }
         }
+    }
+
+    private static void menuJogo(Liga l) {
+        String[] s = {"**** Menu Jogo ****\n", "Escolher Equipas", "Escolher Titulares Casa" , "Escolher Titulares Fora", "Jogar"};
+        Menu jogo = new Menu(s);
+        Jogo j = new Jogo();
+        Equipa casa = null;
+        Equipa fora = null;
+        int getOpt = -1;
+        while(getOpt != 0) {
+            jogo.execute();
+            getOpt = jogo.getOption();
+            switch (getOpt) {
+                case 1:
+                    Map.Entry<String, String> equipas = FMView.escolherEquipas();
+                    try{
+                        casa = l.getEquipa(equipas.getKey());
+                        fora = l.getEquipa(equipas.getValue());
+                        j.setEquipaCasa(casa);
+                        j.setEquipaFora(fora);
+                    }
+                    catch(EquipaNaoExisteException e){
+                        System.out.println(e.getMessage());
+                    }
+
+                    break;
+                case 2:
+                    if (casa != null){
+                        j.setJogadoresCasa(FMView.mostraJogadores(j.getEquipaCasa()));
+                        j.adicionaTitularesCasaJogo();
+                    }
+                    else FMView.erros(1);
+
+                    break;
+                case 3:
+                    if (fora != null){
+                        j.setJogadoresFora(FMView.mostraJogadores(j.getEquipaFora()));
+                        j.adicionaTitularesForaJogo();
+                    }
+                    else FMView.erros(2);
+                    break;
+                case 4:
+                    if (casa == null){
+                        FMView.erros(1);
+                    }
+                    else if (fora == null){
+                        FMView.erros(2);
+                    }
+                    else if (j.getJogadoresCasa().size() == 0){
+                        FMView.erros(3);
+                    }
+                    else if (j.getJogadoresFora().size() == 0){
+                        FMView.erros(4);
+                    }
+                    else{
+
+                    }
+                    break;
+            }
+        }
+
+
     }
 }

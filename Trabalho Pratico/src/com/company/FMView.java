@@ -130,4 +130,35 @@ public class FMView {
     public static void displayHabilidadeEquipa(int habilidade){
         System.out.println("A habilidade da equipa é: " + habilidade);
     }
+
+    public static Map.Entry<String, String> escolherEquipas(){
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Qual a equipa da casa?");
+        String casa = sc.nextLine();
+        System.out.println("Qual a equipa da casa?");
+        String fora = sc.nextLine();
+        return new AbstractMap.SimpleEntry<>(casa, fora);
+    }
+
+    public static List<Integer> mostraJogadores(Equipa e){
+        Scanner sc = new Scanner(System.in);
+        List<Integer> result = new ArrayList<>();
+        for (Jogador j : e.getJogadores().values()){
+            System.out.println(j.toString());
+        }
+        System.out.println("Escolha os Titulares: ");
+        for (int i = 0; i < 11; i++){
+            result.add(sc.nextInt());
+        }
+        return result;
+    }
+
+    public static void erros(int err){
+        switch (err) {
+            case 1 -> System.out.println("A Equipa da casa ainda não foi escolhida");
+            case 2 -> System.out.println("A Equipa de fora ainda não foi escolhida");
+            case 3 -> System.out.println("Ainda não escolheu os jogadores da quipa da Casa");
+            case 4 -> System.out.println("Ainda não escolheu os jogadores da quipa de Fora");
+        }
+    }
 }
