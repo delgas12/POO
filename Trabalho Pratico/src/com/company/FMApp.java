@@ -128,10 +128,11 @@ public class FMApp {
                         System.out.println("correu");
                         p = new Parser();
                         p.parse();
+                        System.out.println(p.getEquipas().toString());
                         l.setEquipas(p.getEquipas());
                         l.setJogos(p.getJogos());
                         //System.out.println(l.toString());
-                        //System.out.println(l.getEquipa("Mendelssohn F. C."));
+                        //System.out.println(l.getEquipa("Mahler Athletic"));
                         //System.out.println(l.getJogos());
                     }
                     catch (LinhaIncorretaException | InsufficientPlayers e) {
@@ -197,7 +198,13 @@ public class FMApp {
                         FMView.erros(4);
                     }
                     else{
-
+                        int periodos = 0;
+                        int subs = 0;
+                        while (periodos < 18){
+                            j.calculaJogo();
+                            System.out.println(j.getBola());
+                            periodos++;
+                        }
                     }
                     break;
             }

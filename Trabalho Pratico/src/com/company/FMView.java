@@ -135,7 +135,7 @@ public class FMView {
         Scanner sc = new Scanner(System.in);
         System.out.println("Qual a equipa da casa?");
         String casa = sc.nextLine();
-        System.out.println("Qual a equipa da casa?");
+        System.out.println("Qual a equipa de fora?");
         String fora = sc.nextLine();
         return new AbstractMap.SimpleEntry<>(casa, fora);
     }

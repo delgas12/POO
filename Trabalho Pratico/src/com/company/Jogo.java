@@ -16,6 +16,7 @@ public class Jogo {
     private Equipa equipaFora;
     Map<Integer, Integer> substituicoesCasa;
     Map<Integer, Integer> substituicoesFora;
+    private String bola;
 
     public Jogo(){
         nomeEquipaCasa = "";
@@ -28,6 +29,7 @@ public class Jogo {
         equipaFora = new Equipa();
         substituicoesCasa = new HashMap<>();
         substituicoesFora = new HashMap<>();
+        this.bola = "Meio Campo";
     }
 
     public Jogo (String ec, String ef, int gc, int gf, LocalDate d,  List<Integer> jc, Map<Integer, Integer> sc,  List<Integer> jf, Map<Integer, Integer> sf){
@@ -51,6 +53,7 @@ public class Jogo {
         this.jogadoresFora = j.getJogadoresFora();
         this.substituicoesCasa = j.getSubstituicoesCasa();
         this.substituicoesFora = j.getSubstituicoesFora();
+        this.bola = "Meio Campo";
     }
 
 
@@ -86,7 +89,7 @@ public class Jogo {
     }
 
     public Equipa getEquipaFora(){
-        return this.equipaCasa.clone();
+        return this.equipaFora.clone();
     }
     public Map<Integer, Integer> getSubstituicoesCasa() {
         return new HashMap<>(this.substituicoesCasa);
@@ -169,6 +172,191 @@ public class Jogo {
     public void adicionaTitularesForaJogo(){
         this.equipaFora.adicionaTitularesEquipa(this.jogadoresFora);
     }
-    
+
+    public String getBola(){
+        return this.bola;
+    }
+
+
+
+    //Casa X
+    //Fora Y
+
+    public void calculaJogo() {
+        Random rand = new Random();
+        int rand_int = rand.nextInt(100);
+        switch (this.bola) {
+            case "Canto Fora":
+                this.cantoFora(rand_int, 10,25,25,25,15);
+                break;
+            case "Pontape de Baliza Fora":
+                this.pbFora(rand_int,50,35,15);
+                break;
+            case "Area Fora":
+                this.areaFora(rand_int, 10, 20, 20, 30, 15, 5);
+                break;
+            case "Defesa Fora":
+                this.defesaFora(rand_int, 5,40,10,10,25,10);
+                break;
+            case "Meio Campo":
+                this.meioCampo(rand_int,2,2,18,18,30,30);
+                break;
+            case "Defesa Casa":
+                this.defesaCasa(rand_int, 5, 40, 10, 10, 25, 10);
+                break;
+            case "Area Casa":
+                this.areaCasa(rand_int, 10, 30, 50, 80, 95, 5);
+                break;
+            case "Canto Casa":
+                this.cantoCasa(rand_int, 10, 25, 25, 25, 15);
+            case "Pontape de Baliza Casa":
+                this.pbCasa(rand_int, 50, 35, 15);
+                break;
+        }
+    }
+
+    public void cantoFora(int rand_int, int goloCasa, int cantoFora, int pbFora, int defesaFora, int meioCampo){
+        if (rand_int <= goloCasa) {
+            this.golosCasa++;
+            this.bola = "Meio Campo";
+        } else if (rand_int <= goloCasa + cantoFora){
+            this.bola = "Canto Fora";
+        } else if (rand_int <= goloCasa + cantoFora + pbFora) {
+            this.bola = "Pontape de Baliza Fora";
+        } else if (rand_int <= goloCasa + cantoFora + pbFora + defesaFora) {
+            this.bola = "Defesa Fora";
+        } else { // 15 15
+            this.bola = "Meio Campo";
+        }
+    }
+
+    public void pbFora(int rand_int, int meioCampo, int defesaFora, int defesaCasa){
+        if (rand_int <= meioCampo) {
+            this.bola = "Meio Campo";
+        } else if (rand_int <= meioCampo + defesaFora) {
+            this.bola = "Defesa Fora";
+        } else {
+            this.bola = "Defesa Casa";
+        }
+    }
+
+    public void areaFora(int rand_int, int goloCasa, int cantoFora, int pbFora, int defesaFora, int defesaCasa, int meioCampo){
+        if (rand_int <= goloCasa) {
+            this.golosCasa++;
+            this.bola = "Meio Campo";
+        } else if (rand_int <= goloCasa + cantoFora) {
+            this.bola = "Canto Fora";
+        } else if (rand_int <= goloCasa + cantoFora + pbFora) {
+            this.bola = "Pontape de Baliza Fora";
+        } else if (rand_int <= goloCasa + cantoFora + pbFora + defesaFora) {
+            this.bola = "Defesa Fora";
+        } else if (rand_int <= goloCasa + cantoFora + pbFora + defesaFora + defesaCasa) {
+            this.bola = "Defesa Casa";
+        } else {
+            this.bola = "Meio Campo";
+        }
+    }
+
+    public void defesaFora(int rand_int, int goloCasa, int areaFora, int cantoFora, int pbFora, int defesaCasa, int meioCampo){
+        if (rand_int <= goloCasa) {
+            this.golosCasa++;
+            this.bola = "Meio Campo";
+        } else if (rand_int <= goloCasa + areaFora) {
+            this.bola = "Area Fora";
+        } else if (rand_int <= goloCasa + areaFora + cantoFora) {
+            this.bola = "Canto Fora";
+        } else if (rand_int <= goloCasa + areaFora + cantoFora + pbFora) {
+            this.bola = "Pontape de Baliza Fora";
+        } else if (rand_int <= goloCasa + areaFora + cantoFora + pbFora + defesaCasa) {
+            this.bola = "Defesa Casa";
+        } else {
+            this.bola = "Meio Campo";
+        }
+    }
+
+    public void meioCampo(int rand_int, int goloCasa, int goloFora, int areaCasa, int areaFora, int defesaFora, int defesaCasa){
+        if (rand_int <= goloCasa) {
+            this.golosCasa++;
+            this.bola = "Meio Campo";
+        } else if (rand_int <= goloCasa + goloFora) {
+            this.golosFora++;
+            this.bola = "Meio Campo";
+        } else if (rand_int <= goloCasa + goloFora + areaCasa) {
+            this.bola = "Area Casa";
+        } else if (rand_int <= goloCasa + goloFora + areaCasa + areaFora) {
+            this.bola = "Area Fora";
+        } else if (rand_int <= goloCasa + goloFora + areaCasa + areaFora + defesaFora) {
+            this.bola = "Defesa Fora";
+        } else {
+            this.bola = "Defesa Casa";
+        }
+    }
+
+    public void defesaCasa (int rand_int, int goloCasa, int meioCampo, int pbCasa, int cantoCasa, int areaCasa, int defesaFora){
+        if (rand_int <= goloCasa) {
+            this.golosCasa++;
+            this.bola = "Meio Campo";
+        } else if (rand_int <= goloCasa + meioCampo) {
+            this.bola = "Meio Campo";
+        } else if (rand_int <= goloCasa + meioCampo + pbCasa) {
+            this.bola = "Pontape de Baliza Casa";
+        } else if (rand_int <= goloCasa + meioCampo + pbCasa + cantoCasa) {
+            this.bola = "Canto Casa";
+        } else if (rand_int <= goloCasa + meioCampo + pbCasa + cantoCasa + areaCasa) {
+            this.bola = "Area Casa";
+        } else {
+            this.bola = "Defesa Fora";
+        }
+    }
+
+    public void areaCasa(int rand_int, int goloCasa, int cantoCasa, int pbCasa, int defesaCasa, int meioCampo, int defesaFora){
+        if (rand_int <= cantoCasa) {
+            this.golosCasa++;
+            this.bola = "Meio Campo";
+        } else if (rand_int <= goloCasa) {
+            this.bola = "Canto Casa";
+        } else if (rand_int <= cantoCasa + pbCasa ) {
+            this.bola = "Pontape de Baliza Casa";
+        } else if (rand_int <= cantoCasa + pbCasa + defesaCasa) {
+            this.bola = "Defesa Casa";
+        } else if (rand_int <= cantoCasa + pbCasa + defesaCasa + meioCampo) {
+            this.bola = "Meio Campo";
+        } else {
+            this.bola = "Defesa Fora";
+        }
+    }
+
+    public void pbCasa (int rand_int, int meioCampo, int defesaCasa, int defesaFora){
+        if (rand_int <= meioCampo) {
+            this.bola = "Meio Campo";
+        } else if (rand_int <= meioCampo + defesaCasa) {
+            this.bola = "Defesa Casa";
+        } else {
+            this.bola = "Defesa Fora";
+        }
+    }
+
+    public void cantoCasa(int rand_int, int golo, int cantoCasa, int pbCasa, int defesaCasa, int meioCampo){
+        if (rand_int <= golo){
+            this.golosFora++;
+            this.bola = "Meio Campo";
+        }
+        else if (rand_int <= golo + cantoCasa){
+            this.bola = "Canto Casa";
+        }
+        else if (rand_int <= golo + cantoCasa + pbCasa){
+            this.bola = "Pontape de Baliza Casa";
+        }
+        else if (rand_int <= golo + cantoCasa + pbCasa + defesaCasa){
+            this.bola = "Defesa Casa";
+        }
+        else{
+            this.bola = "Meio Campo";
+        }
+    }
+
+    public void substituicao(int jOut, int jIn){
+
+    }
 
 }
