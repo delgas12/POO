@@ -269,6 +269,9 @@ public class FMApp {
     }
 
     public static void correJogo(Equipa casa, Equipa fora, Jogo j , Liga l) throws InterruptedException{
+        int resultJogada = 0;
+        String bolaAntes = "";
+        String bolaDepois = "";
         Map.Entry<String, String> entry;
         String equipa = null;
         if (casa == null){
@@ -304,18 +307,25 @@ public class FMApp {
             boolean subValida = false;
             int subsCasa = 0, subsFora = 0;
             while (periodos < 18){
-                if (subValida || periodos == 0) System.out.println(j.getBola());
+                //if (subValida || periodos == 0) System.out.println(j.getBola());
                 if (periodos % 2 == 0){
                     try{
                         equipa = FMView.pedeSubstituicao();
                         if (!equipa.equals("")){
                             if (equipa.equals("casa")) eq = casa;
                             else eq = fora;
-                            if (subsCasa > 3) throw new SubstituicaoInvalida("Já gastou o numero de substituições!");
-                            if (subsFora > 3) throw new SubstituicaoInvalida("Já gastou o numero de substituições!");
+                            if (equipa.equals("casa") && subsCasa > 2){
+                                periodos--;
+                                throw new SubstituicaoInvalida("Já gastou o numero de substituições!");
+                            }
+                            if (equipa.equals("fora") && subsFora > 2) {
+                                periodos--;
+                                throw new SubstituicaoInvalida("Já gastou o numero de substituições!");
+                            }
                             entry = FMView.pedeJogadoresSub(eq.listaSemTitulares(), eq.getTitularesList());
                             String in = entry.getKey();
                             String out = entry.getValue();
+                            subValida = false;
                             subValida = j.substituicao(eq, in, out);
                         }
                     }
@@ -324,16 +334,31 @@ public class FMApp {
                     }
                 }
                 if (subValida){
-                    if (equipa.equals("casa")) subsCasa++;
-                    else subsFora++;
+                    if (equipa.equals("casa")){
+                        subsCasa++;
+                    } else if (equipa.equals("fora")){
+                        subsFora++;
+                    }
                     l.adicionaEquipa(eq);
                     habCasa = casa.calculaHabilidadeEquipa();
                     habFora = fora.calculaHabilidadeEquipa();
                     Thread.sleep(2000);
-                    j.calculaJogo(habCasa, habFora);
+                    bolaAntes = j.getBola();
+                    resultJogada = j.calculaJogo(habCasa, habFora);
+                    bolaDepois = j.getBola();
+                    FMView.displayJogadas(bolaAntes,bolaDepois,resultJogada);
+
+                }
+                else if (equipa.equals("")){
+                    bolaAntes = j.getBola();
+                    resultJogada = j.calculaJogo(habCasa,habFora);
+                    bolaDepois = j.getBola();
+                    FMView.displayJogadas(bolaAntes,bolaDepois,resultJogada);
                 }
                 else periodos--;
                 periodos++;
+                equipa = "";
+                subValida = false;
             }
             System.out.println(casa.getNome() + " " + j.getGolosCasa() + " - "  + j.getGolosFora() +  " " + fora.getNome() );
         }

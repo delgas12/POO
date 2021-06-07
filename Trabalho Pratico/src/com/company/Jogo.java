@@ -351,39 +351,44 @@ public class Jogo {
      * @param fora valor de favorecimento da equipa de fora
      **/
 
-    public void calculaJogo(int casa, int fora) {
+
+    //RESULT GOLO CASA -> 1
+    //RESULT GOLO FORA -> 2
+    public int calculaJogo(int casa, int fora) {
         Random rand = new Random();
         int rand_int = rand.nextInt(100);
+        int result = 0;
         int favoreceCasa = (casa-fora);
         int favoreceFora = (fora-casa);
         switch (this.bola) {
             case "Canto Fora":
-                this.cantoFora(rand_int, 10 + favoreceCasa,25 + favoreceCasa,25 + favoreceFora,25 + favoreceFora,15);
+                result = this.cantoFora(rand_int, 10 + favoreceCasa,25 + favoreceCasa,25 + favoreceFora,25 + favoreceFora,15);
                 break;
             case "Pontape de Baliza Fora":
                 this.pbFora(rand_int,50,35,15);
                 break;
             case "Area Fora":
-                this.areaFora(rand_int, 10 + favoreceCasa, 20 + favoreceCasa, 20 + favoreceFora, 30 + favoreceFora, 5, 15);
+                result = this.areaFora(rand_int, 10 + favoreceCasa, 20 + favoreceCasa, 20 + favoreceFora, 30 + favoreceFora, 5, 15);
                 break;
             case "Defesa Fora":
-                this.defesaFora(rand_int, 5 + favoreceCasa,40 + favoreceCasa,10 + favoreceCasa,10 + favoreceFora,25 + favoreceFora,10 + favoreceFora);
+                result = this.defesaFora(rand_int, 5 + favoreceCasa,40 + favoreceCasa,10 + favoreceCasa,10 + favoreceFora,25 + favoreceFora,10 + favoreceFora);
                 break;
             case "Meio Campo":
-                this.meioCampo(rand_int,2,2,18 + favoreceFora,18 + favoreceCasa,30 + favoreceCasa,30 + favoreceFora);
+                result = this.meioCampo(rand_int,2,2,18 + favoreceFora,18 + favoreceCasa,30 + favoreceCasa,30 + favoreceFora);
                 break;
             case "Defesa Casa":
-                this.defesaCasa(rand_int, 5 + favoreceFora, 40 + favoreceCasa, 10 + favoreceCasa, 10 + favoreceFora, 25 + favoreceFora, 10 + favoreceCasa);
+                result = this.defesaCasa(rand_int, 5 + favoreceFora, 40 + favoreceCasa, 10 + favoreceCasa, 10 + favoreceFora, 25 + favoreceFora, 10 + favoreceCasa);
                 break;
             case "Area Casa":
-                this.areaCasa(rand_int, 10 + favoreceFora, 20 + favoreceFora, 20 + favoreceCasa, 30, 15, 5);
+                result = this.areaCasa(rand_int, 10 + favoreceFora, 20 + favoreceFora, 20 + favoreceCasa, 30, 15, 5);
                 break;
             case "Canto Casa":
-                this.cantoCasa(rand_int, 10 + favoreceFora, 25 + favoreceFora, 25 + favoreceCasa , 25 + favoreceCasa, 15);
+                result = this.cantoCasa(rand_int, 10 + favoreceFora, 25 + favoreceFora, 25 + favoreceCasa , 25 + favoreceCasa, 15);
             case "Pontape de Baliza Casa":
                 this.pbCasa(rand_int, 50, 35, 15);
                 break;
         }
+        return result;
     }
 
     /**
@@ -396,9 +401,11 @@ public class Jogo {
      * @param meioCampo valor da probabilidade de, a partir do canto na área da equipa de fora, a equipa de fora aliviar a bola para o meio campo
      **/
 
-    public void cantoFora(int rand_int, int goloCasa, int cantoFora, int pbFora, int defesaFora, int meioCampo){
+    public int cantoFora(int rand_int, int goloCasa, int cantoFora, int pbFora, int defesaFora, int meioCampo){
+        int result = 0;
         if (rand_int <= goloCasa) {
             this.golosCasa++;
+            result = 1;
             System.out.println("GOLO CARALHO");
             this.bola = "Meio Campo";
         } else if (rand_int <= goloCasa + cantoFora){
@@ -410,6 +417,7 @@ public class Jogo {
         } else { // 15 15
             this.bola = "Meio Campo";
         }
+        return result;
     }
 
     /**
@@ -441,9 +449,11 @@ public class Jogo {
      * @param defesaCasa valor de probabilidade da bola ser aliviada para a área de defesa da equipa de fora
      * @param meioCampo valor de probabilidade da bola ser aliviada para o meio campo
      */
-    public void areaFora(int rand_int, int goloCasa, int cantoFora, int pbFora, int defesaFora, int defesaCasa, int meioCampo){
+    public int areaFora(int rand_int, int goloCasa, int cantoFora, int pbFora, int defesaFora, int defesaCasa, int meioCampo){
+        int result = 0;
         if (rand_int <= goloCasa) {
             this.golosCasa++;
+            result = 1;
             System.out.println("GOLO CARALHO");
             this.bola = "Meio Campo";
         } else if (rand_int <= goloCasa + cantoFora) {
@@ -457,6 +467,7 @@ public class Jogo {
         } else {
             this.bola = "Meio Campo";
         }
+        return result;
     }
 
     /**
@@ -470,9 +481,11 @@ public class Jogo {
      * @param meioCampo valor da probabilidade de, a partir da área de defesa da equipa de fora, a equipa de fora aliviar a bola para o meio campo
      **/
 
-    public void defesaFora(int rand_int, int goloCasa, int areaFora, int cantoFora, int pbFora, int defesaCasa, int meioCampo){
+    public int defesaFora(int rand_int, int goloCasa, int areaFora, int cantoFora, int pbFora, int defesaCasa, int meioCampo){
+        int result = 0;
         if (rand_int <= goloCasa) {
             this.golosCasa++;
+            result = 1;
             System.out.println("GOLO CARALHO");
             this.bola = "Meio Campo";
         } else if (rand_int <= goloCasa + areaFora) {
@@ -486,6 +499,7 @@ public class Jogo {
         } else {
             this.bola = "Meio Campo";
         }
+        return result;
     }
 
     /**
@@ -499,13 +513,17 @@ public class Jogo {
      * @param defesaCasa valor da probabilidade da bola passar para a área de defesa da equipa da casa
      **/
 
-    public void meioCampo(int rand_int, int goloCasa, int goloFora, int areaCasa, int areaFora, int defesaFora, int defesaCasa){
+    public int meioCampo(int rand_int, int goloCasa, int goloFora, int areaCasa, int areaFora, int defesaFora, int defesaCasa){
+        int result = 0;
         if (rand_int <= goloCasa) {
             this.golosCasa++;
+            result = 1;
             System.out.println("GOLO CARALHO");
             this.bola = "Meio Campo";
         } else if (rand_int <= goloCasa + goloFora) {
             this.golosFora++;
+            result = 2;
+            System.out.println("GOLO CARALHO");
             this.bola = "Meio Campo";
         } else if (rand_int <= goloCasa + goloFora + areaCasa) {
             this.bola = "Area Casa";
@@ -516,6 +534,7 @@ public class Jogo {
         } else {
             this.bola = "Defesa Casa";
         }
+        return result;
     }
 
     /**
@@ -529,9 +548,11 @@ public class Jogo {
      * @param defesaFora valor da probabilidade da bola ser aliviada para a zona da defesa da equipa de fora
      **/
 
-    public void defesaCasa (int rand_int, int goloFora, int meioCampo, int pbCasa, int cantoCasa, int areaCasa, int defesaFora){
+    public int defesaCasa (int rand_int, int goloFora, int meioCampo, int pbCasa, int cantoCasa, int areaCasa, int defesaFora){
+        int result = 0;
         if (rand_int <= goloFora) {
-            this.golosCasa++;
+            this.golosFora++;
+            result = 2;
             System.out.println("GOLO CARALHO");
             this.bola = "Meio Campo";
         } else if (rand_int <= goloFora + meioCampo) {
@@ -545,6 +566,7 @@ public class Jogo {
         } else {
             this.bola = "Defesa Fora";
         }
+        return result;
     }
 
     /**
@@ -558,8 +580,10 @@ public class Jogo {
      * @param defesaFora valor de probabilidade da bola ser aliviada para a zona de defesa da equipa de fora
      */
 
-    public void areaCasa(int rand_int, int goloFora, int cantoCasa, int pbCasa, int defesaCasa, int meioCampo, int defesaFora){
+    public int areaCasa(int rand_int, int goloFora, int cantoCasa, int pbCasa, int defesaCasa, int meioCampo, int defesaFora){
+        int result = 0;
         if (rand_int <= cantoCasa) {
+            result = 2;
             this.golosFora++;
             System.out.println("GOLO CARALHO");
             this.bola = "Meio Campo";
@@ -574,6 +598,7 @@ public class Jogo {
         } else {
             this.bola = "Defesa Fora";
         }
+        return result;
     }
 
 
@@ -604,11 +629,12 @@ public class Jogo {
      * @param meioCampo valor de probabilidade da bola ser aliviada para o meio campo
      */
 
-    public void cantoCasa(int rand_int, int goloFora, int cantoCasa, int pbCasa, int defesaCasa, int meioCampo){
+    public int cantoCasa(int rand_int, int goloFora, int cantoCasa, int pbCasa, int defesaCasa, int meioCampo){
+        int result = 0;
         if (rand_int <= goloFora){
             this.golosFora++;
             System.out.println("GOLO CARALHO");
-
+            result = 2;
             this.bola = "Meio Campo";
         }
         else if (rand_int <= goloFora + cantoCasa){
@@ -623,6 +649,7 @@ public class Jogo {
         else{
             this.bola = "Meio Campo";
         }
+        return result;
     }
 
     /**
