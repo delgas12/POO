@@ -193,6 +193,14 @@ public class Jogo {
         this.jogadoresFora = new ArrayList<>(jogFora);
     }
 
+    public void setSubstituicoesCasa(Map<Integer, Integer> subs){
+        this.substituicoesCasa = new HashMap<>(subs);
+    }
+
+    public void setSubstituicoesFora(Map<Integer, Integer> subs){
+        this.substituicoesFora = new HashMap<>(subs);
+    }
+
     /**
      *  Método de alteração da variável de instância golosCasa
      * @param gCasa novo valor da variável de instância golosCasa
@@ -437,7 +445,6 @@ public class Jogo {
         if (rand_int <= goloCasa) {
             this.golosCasa++;
             System.out.println("GOLO CARALHO");
-
             this.bola = "Meio Campo";
         } else if (rand_int <= goloCasa + cantoFora) {
             this.bola = "Canto Fora";
@@ -467,7 +474,6 @@ public class Jogo {
         if (rand_int <= goloCasa) {
             this.golosCasa++;
             System.out.println("GOLO CARALHO");
-
             this.bola = "Meio Campo";
         } else if (rand_int <= goloCasa + areaFora) {
             this.bola = "Area Fora";
@@ -497,7 +503,6 @@ public class Jogo {
         if (rand_int <= goloCasa) {
             this.golosCasa++;
             System.out.println("GOLO CARALHO");
-
             this.bola = "Meio Campo";
         } else if (rand_int <= goloCasa + goloFora) {
             this.golosFora++;
@@ -528,7 +533,6 @@ public class Jogo {
         if (rand_int <= goloFora) {
             this.golosCasa++;
             System.out.println("GOLO CARALHO");
-
             this.bola = "Meio Campo";
         } else if (rand_int <= goloFora + meioCampo) {
             this.bola = "Meio Campo";
@@ -558,7 +562,6 @@ public class Jogo {
         if (rand_int <= cantoCasa) {
             this.golosFora++;
             System.out.println("GOLO CARALHO");
-
             this.bola = "Meio Campo";
         } else if (rand_int <= goloFora) {
             this.bola = "Canto Casa";
@@ -631,10 +634,12 @@ public class Jogo {
      * @throws SubstituicaoInvalida caso a substituição seja inválida
      */
 
-    public void substituicao(Equipa equipa , String jIn , String jOut) throws JogadorNaoExiste , SubstituicaoInvalida {
+    public boolean substituicao (Equipa equipa , String jIn , String jOut) throws JogadorNaoExiste , SubstituicaoInvalida {
 
         Jogador jogIn = equipa.procuraJogador(jIn);
         Jogador jogOut = equipa.procuraJogador(jOut);
+        Map<Integer, Integer> subs;
+        Map.Entry<Boolean, Map<Integer, Integer>> resSub;
 
         if(jogIn == null) throw new JogadorNaoExiste ("" + jIn + " não existe na equipa");
         if(jogOut == null) throw new JogadorNaoExiste ("" + jOut + " não existe na equipa");
@@ -642,14 +647,16 @@ public class Jogo {
         if (equipa.equals(this.equipaCasa)){
             if (this.substituicoesCasa.containsKey(jogIn.getNumeroJogador())) throw new SubstituicaoInvalida("Jogador a entrar já foi substituido e não pode voltar a entrar no jogo");
             else {
-                equipa.substituiEquipa(jogIn, jogOut);
+                resSub = equipa.substituiEquipa(jogIn, jogOut, this.getSubstituicoesCasa());
+                this.setSubstituicoesCasa(resSub.getValue());
             }
         }else{
             if (this.substituicoesFora.containsKey(jogIn.getNumeroJogador())) throw new SubstituicaoInvalida("Jogador a entrar já foi substituido e não pode voltar a entrar no jogo");
             else {
-                equipa.substituiEquipa(jogIn, jogOut);
+                resSub = equipa.substituiEquipa(jogIn, jogOut, this.getSubstituicoesFora());
+                this.setSubstituicoesFora(resSub.getValue());
             }
         }
-
+        return resSub.getKey();
     }
 }

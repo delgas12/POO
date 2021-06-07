@@ -5,15 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-// Wagner Athletic
-// Sporting Club Schubert
 
-//Avançado,Jucca,13,100,100,100,100,100,100,100,100,100,
-//Defesa,Toldy,13,100,100,100,100,100,100,100,100,100
-//Lateral,Castiçu,13,100,100,100,100,100,100,100,100,100
-
-// David Alexandre Ferreira Duarte
-// Tiago Lucas Alves
 
 public class FMApp {
     public static void main(String[] args){
@@ -308,42 +300,52 @@ public class FMApp {
                 else habFora = -(difHab);
                 habCasa = 0;
             }
-            Equipa eq;
+            Equipa eq = null;
+            boolean subValida = false;
             int subsCasa = 0, subsFora = 0;
             while (periodos < 18){
-                System.out.println(j.getBola());
+                if (subValida || periodos == 0) System.out.println(j.getBola());
                 if (periodos % 2 == 0){
                     try{
                         equipa = FMView.pedeSubstituicao();
                         if (!equipa.equals("")){
-                            if (equipa.equals("casa")){
-                                eq = casa;
-                                subsCasa++;
-                            }
-                            else{
-                                eq = fora;
-                                subsFora++;
-                            }
+                            if (equipa.equals("casa")) eq = casa;
+                            else eq = fora;
                             if (subsCasa > 3) throw new SubstituicaoInvalida("Já gastou o numero de substituições!");
                             if (subsFora > 3) throw new SubstituicaoInvalida("Já gastou o numero de substituições!");
                             entry = FMView.pedeJogadoresSub(eq.listaSemTitulares(), eq.getTitularesList());
                             String in = entry.getKey();
                             String out = entry.getValue();
-                            j.substituicao(eq, in, out);
-                            l.adicionaEquipa(eq);
+                            subValida = j.substituicao(eq, in, out);
                         }
                     }
                     catch (JogadorNaoExiste | SubstituicaoInvalida e){
                         System.out.println(e.getMessage());
                     }
                 }
-                habCasa = casa.calculaHabilidadeEquipa();
-                habFora = fora.calculaHabilidadeEquipa();
-                Thread.sleep(2000);
-                j.calculaJogo(habCasa, habFora);
+                if (subValida){
+                    if (equipa.equals("casa")) subsCasa++;
+                    else subsFora++;
+                    l.adicionaEquipa(eq);
+                    habCasa = casa.calculaHabilidadeEquipa();
+                    habFora = fora.calculaHabilidadeEquipa();
+                    Thread.sleep(2000);
+                    j.calculaJogo(habCasa, habFora);
+                }
+                else periodos--;
                 periodos++;
             }
             System.out.println(casa.getNome() + " " + j.getGolosCasa() + " - "  + j.getGolosFora() +  " " + fora.getNome() );
         }
     }
 }
+
+// Wagner Athletic
+// Sporting Club Schubert
+
+//Avançado,Jucca,13,100,100,100,100,100,100,100,100,100,
+//Defesa,Toldy,13,100,100,100,100,100,100,100,100,100
+//Lateral,Castiçu,13,100,100,100,100,100,100,100,100,100
+
+// David Alexandre Ferreira Duarte
+// Tiago Lucas Alves

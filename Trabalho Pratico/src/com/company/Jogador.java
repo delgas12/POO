@@ -278,7 +278,7 @@ public abstract class Jogador implements Comparable<Jogador>{
      * @return subtração do valor de habilidade de um jogador A e um jogador B
      **/
     public int compareTo(Jogador j){
-        return (this.getHabilidade() - j.getHabilidade());
+        return (j.getHabilidade() - this.getHabilidade());
     }
 
     /**
@@ -287,7 +287,7 @@ public abstract class Jogador implements Comparable<Jogador>{
      **/
 
     public String toString(){
-        return /*"\nEstatísticas do Jogador: Numero: "+ */"\nPosição: " + this.posicao + ", Numero: " + this.numero + ", Nome: " + this.nome + ", Habilidade: " + this.habilidade; /*+ "\nHistorial: " + this.historial.toString();+
+        return /*"\nEstatísticas do Jogador: Numero: "+ */"\nPosição: " + this.posicao + ", Numero: " + this.numero + ", Nome: " + this.nome + ", Habilidade: " + this.habilidade + "\nHistorial: " + this.historial.toString();/* +
                 "\nVelocidade: " + this.velocidade + "\nResistencia: " + this.resistencia +
                 "\nDestreza: " + this.destreza + "\nImpulsão: " + this.impulsao + "\nJogo De Cabeça: " + this.jogoDeCabeca +
                 "\nRemate: " + this.remate + "\nPasse: " + this.passe + "\nPosição: " + this.posicao; + "\nHabilidade: " + this.habilidade +

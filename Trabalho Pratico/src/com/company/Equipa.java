@@ -373,6 +373,44 @@ public class Equipa implements Comparable<Equipa>{
      * @throws SubstituicaoInvalida caso o jogador a entrar já conste nos titulares, ou o jogador a sair não conste nos titulares, ou caso algum destes não exista na equipa
      **/
 
+    // sai -> entra
+
+    public Map.Entry<Boolean, Map<Integer, Integer>> substituiEquipa(Jogador in, Jogador out, Map<Integer, Integer> subs) throws SubstituicaoInvalida{
+        boolean success = false;
+        Iterator<Map.Entry<String, List<Jogador>>> it = this.titulares.entrySet().iterator();
+        List<Jogador> aux;
+        Map.Entry<String, List<Jogador>> entry;
+        String posicao = "";
+        boolean encontrouOut = false, encontrouIn = false;
+        List<Jogador> removerOut = null;
+        while (it.hasNext()){
+            entry = it.next();
+            aux = entry.getValue();
+            if (aux.contains(out)){
+                encontrouOut = true;
+                removerOut = aux;
+                posicao = entry.getKey();
+            }
+            if (aux.contains(in)){
+                encontrouIn = true;
+                throw new SubstituicaoInvalida("Jogador" + in.getNome() + "já consta nos titulares");
+            }
+        }
+        if (!encontrouOut) throw new SubstituicaoInvalida("Jogador " + out.getNome() + "não consta da lista dos titulares");
+
+        if (subs.containsKey(in.getNumeroJogador())) throw new SubstituicaoInvalida("Jogador " + in.getNome() + "já foi substituído antes e não pode voltar a entrar");
+
+        removerOut.remove(out);
+        if (!in.getPosicao().equals(posicao)){
+            in.setHabilidade((int) (in.getHabilidade()*0.7));
+            in.setPosicao(posicao);
+        }
+        removerOut.add(in.clone());
+        subs.put(out.getNumeroJogador(), in.getNumeroJogador());
+        success = true;
+        return new AbstractMap.SimpleEntry<>(success, subs);
+    }
+/*
     public void substituiEquipa(Jogador in, Jogador out) throws SubstituicaoInvalida{
         Iterator<Map.Entry<String, List<Jogador>>> it = this.titulares.entrySet().iterator();
         List<Jogador> aux;
@@ -401,7 +439,7 @@ public class Equipa implements Comparable<Equipa>{
         aux.add(in);
         this.titulares.put(posicao, aux);
     }
-
+*/
     /**
      * Método que calcula a lista dos Jogadores no banco
      * @return Jogadores no plantel exceto os que estão nos titulares
