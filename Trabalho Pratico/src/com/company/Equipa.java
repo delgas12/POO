@@ -12,6 +12,7 @@ public class Equipa implements Comparable<Equipa>{
     private Map<String,List<Jogador>> titulares;
     private int habilidade;
 
+    //Construtores da classe Equipa
 
     public Equipa(){
         this.nome = "";
@@ -36,19 +37,41 @@ public class Equipa implements Comparable<Equipa>{
     }
 
     //Getters
+
+    /**
+     *  Método de consulta do valor da variável de instância Nome
+     * @return variável de instancia Nome
+     **/
     public String getNome(){
         return this.nome;
     }
 
+
+
+    /**
+     *  Método de consulta do valor da variável de instância Jogadores
+     * @return variável de instância Jogadores
+     **/
     public Map<Integer,Jogador> getJogadores() {
         return this.jogadores.values().stream().collect(Collectors.toMap(Jogador::getNumeroJogador, Jogador::clone));
     }
+
+    /**
+     *  Método de consulta de um Jogador da Equipa
+     * @param procura Jogador a procurar
+     * @return Cópia do Jogador especificado no parametro
+     * @throws JogadorNaoExiste caso não exista
+     **/
 
     public Jogador getJogadorEquipa(Jogador procura) throws JogadorNaoExiste {
         if (!this.jogadores.containsKey(procura.getNumeroJogador())) throw new JogadorNaoExiste("Jogador não existe nesta equipa");
         return this.jogadores.get(procura.getNumeroJogador());
     }
 
+    /**
+     *  Método de consulta do valor da variável de instância Titulares
+     * @return variável de instância Titulares
+     **/
     public Map<String, List<Jogador>> getTitulares(){
         List<Jogador> aux;
         Map<String, List<Jogador>> result = new HashMap<>();
@@ -61,6 +84,11 @@ public class Equipa implements Comparable<Equipa>{
         return result;
     }
 
+    /**
+     *  Método de consulta da lista de titulares
+     * @return lista dos titulares da equipa
+     **/
+
     public List<Jogador> getTitularesList(){
         List<Jogador> aux = new ArrayList<>();
         Iterator<Map.Entry<String,List<Jogador>>> it = this.titulares.entrySet().iterator();
@@ -72,36 +100,90 @@ public class Equipa implements Comparable<Equipa>{
         return aux;
     }
 
+    /**
+     *  Método de consulta do valor da variável de instância Habilidade
+     * @return variável de instância Habilidade
+     **/
     public int getHabilidade(){
         return this.habilidade;
     }
 
 
-    //Setters
 
+    /**
+     *  Método de alteração da variável de instância jogadores
+     * @param jogadores novo valor da variável de instância jogadores
+     **/
 
     public void setJogadores(Map<Integer,Jogador> jogadores) {
         this.jogadores = jogadores.values().stream().collect(Collectors.toMap(Jogador::getNumeroJogador, Jogador::clone));
     }
 
-    //funçao que calcula a habilidade da equipa recorrendo ao calculo de uma media simples
-    public int habilidadeEquipa(){
-        int resultado = 0;
-        for(Jogador j : this.jogadores.values()){
-            resultado += j.getHabilidade();
-        }
-        return resultado/this.jogadores.size();
+
+
+
+    /**
+     *  Método toString da classe Equipa
+     * @return String com a representação em texto da classe Equipa
+     **/
+
+    public String toString() {
+        return "Equipa{" +
+                "Nome: " + this.nome +
+                //"\n\nJogadores =\n\n" + this.jogadores.toString() +
+                "\n\n\n\ntitulares =" + this.titulares.toString() + "}";
     }
+
+
+    /**
+     *  Método copia de uma Equipa
+     * @return Copia de uma Equipa
+     **/
+    public Equipa clone(){
+        return new Equipa(this);
+    }
+
+    /**
+     *  Método compareTo que define a ordem natural como a ordem alfabética
+     * @param b Equipa a comparar
+     * @return valor da comparação (iguais -> (0); 1º > 2º -> positivo; 1º < 2º -> negativo)
+     **/
+
+    public int compareTo(Equipa b){
+        //iguais -> 0
+        //primeiro maior que o segundo -> > 0
+        //segundo maior que o primeiro -> < 0
+        return this.getNome().compareTo(b.getNome());
+    }
+
+
+    /**
+     *  Método de parse de uma Equipa
+     * @param input lido do ficheiro, separando os atributos por virgulas
+     * @return Equipa
+     **/
 
     public static Equipa parse(String input){
         String[] campos = input.split(",");
         return new Equipa(campos[0]);
     }
 
+    /**
+     *  Método de inserção de uma cópia de um jogador na equipa
+     * @param j jogador a adicionar
+     **/
+
     public void insereJogador(Jogador j){
         this.jogadores.put(j.getNumeroJogador(),j.clone());
     }
 
+
+    /**
+     *  Método de inserção de um jogador como resultado de transferência
+     * @param j jogador a ser inserido
+     * @return Avancado
+     * @throws NumeroNaoDisponivel caso o número do jogador transferido nao esteja disponivel na equipa Destino
+     **/
     public void insereJogadorTransferencia(Jogador j) throws NumeroNaoDisponivel{
         boolean result = true;
         int num = j.getNumeroJogador();;
@@ -119,29 +201,31 @@ public class Equipa implements Comparable<Equipa>{
         this.jogadores.put(j.getNumeroJogador(),j.clone());
     }
 
+    /**
+     *  Método de remoção de um jogador na equipa
+     * @param j jogador a remover
+     * @throws JogadorNaoExiste caso não exista
+     **/
+
     public void removeJogador(Jogador j) throws JogadorNaoExiste{
         if (this.jogadores.remove(j.getNumeroJogador()) == null) throw new JogadorNaoExiste("Jogador não existe na equipa destino");
     }
+
+    /**
+     *  Método de procura de um jogador na equipa
+     * @param nome jogador a adicionar
+     * @return jogador encontrado ou null caso não conste na equipa
+     **/
 
     public Jogador procuraJogador(String nome){
         return this.jogadores.values().stream().filter(j -> j.getNome().equals(nome)).findFirst().orElse(null);
     }
 
 
-    public String toString() {
-        return "Equipa{" +
-                "Nome: " + this.nome +
-                //"\n\nJogadores =\n\n" + this.jogadores.toString() +
-                "\n\n\n\ntitulares =" + this.titulares.toString() + "}";
-    }
-
-    public int compareTo(Equipa b){
-        //iguais -> 0
-        //primeiro maior que o segundo -> > 0
-        //segundo maior que o primeiro -> < 0
-        return this.getNome().compareTo(b.getNome());
-    }
-
+    /**
+     * Método de cálculo de Habilidade dos titulares de uma Equipa
+     * @return  valor calculado
+     */
     public int calculaHabilidadeEquipa (){
         int habilidadeCumulativa = 0;
         Iterator<Map.Entry<String,List<Jogador>>> it = this.titulares.entrySet().iterator();
@@ -154,6 +238,11 @@ public class Equipa implements Comparable<Equipa>{
         return (habilidadeCumulativa/11);
     }
 
+    /**
+     *  Método de inserção de n jogadores de uma lista à lista de titulares da Equipa
+     * @param titulares lista de jogadores a serem adicionados
+     **/
+
     public void adicionaTitularesEquipa(List<Integer> titulares){
         List<Jogador> aux;
         Jogador jog;
@@ -165,8 +254,15 @@ public class Equipa implements Comparable<Equipa>{
         }
     }
 
-
-
+    /**
+     *  Método que cria a lista de titulares consoante a tática especificada pelo utilizador. Esta inserção tem em conta listas ordenadas (com base na habilidade)
+     *  de cada posição, escolhendo o melhor jogador a cada inserção
+     * @param nDefesas número de defesas
+     * @param nLaterais número de laterais
+     * @param nMedios número de médios
+     * @param nAvancados número de avançados
+     * @throws InsufficientPlayers caso o número cumulativo de jogadores na tática não seja 10 (o guarda redes não conta)
+     **/
     public void criaInicial (int nDefesas , int nLaterais,int nMedios, int nAvancados) throws InsufficientPlayers{
         int total = nDefesas + nLaterais + nMedios + nAvancados;
         if (total != 10) throw new InsufficientPlayers("Número de jogadores diferente de 11");
@@ -267,6 +363,16 @@ public class Equipa implements Comparable<Equipa>{
         System.out.println(result.toString());
     }
 
+    /**
+     *  Método que realiza uma substituição. Percorrendo a lista de titulares, é feita a verificação da presença do jogador especificado para sair e do jogador
+     *  que vai entrar. Assim, caso o jogador a sair conste nos titulares, é validada a sua saída e removido da lista de titulares. Para o jogador a entrar, caso
+     *  não conste na lista de titulares, é inserido na mesma e é feita a verificação da igualdade da posição atual com a sua posição de raíz. Caso sejam diferentes,
+     *  é feito um decremento da sua habilidade de 30% e a sua posição atual é alterada para a posição para a qual foi substituído.
+     * @param in jogador a entrar
+     * @param out jogador a sair
+     * @throws SubstituicaoInvalida caso o jogador a entrar já conste nos titulares, ou o jogador a sair não conste nos titulares, ou caso algum destes não exista na equipa
+     **/
+
     public void substituiEquipa(Jogador in, Jogador out) throws SubstituicaoInvalida{
         Iterator<Map.Entry<String, List<Jogador>>> it = this.titulares.entrySet().iterator();
         List<Jogador> aux;
@@ -296,6 +402,10 @@ public class Equipa implements Comparable<Equipa>{
         this.titulares.put(posicao, aux);
     }
 
+    /**
+     * Método que calcula a lista dos Jogadores no banco
+     * @return Jogadores no plantel exceto os que estão nos titulares
+     */
     public List<Jogador> listaSemTitulares(){
         List<Jogador> aux = new ArrayList<>(this.jogadores.values());
         Iterator<Map.Entry<String, List<Jogador>>> it = this.titulares.entrySet().iterator();
@@ -309,7 +419,4 @@ public class Equipa implements Comparable<Equipa>{
         return aux.stream().map(Jogador::clone).collect(Collectors.toList());
     }
 
-    public Equipa clone(){
-        return new Equipa(this);
-    }
 }

@@ -4,33 +4,63 @@ import java.util.ArrayList;
 
 public class GuardaRedes extends Jogador{
 
-        private int elasticidade;
+    private int elasticidade;
 
-        public GuardaRedes(){
-            super();
-            this.elasticidade = 0;
-        }
+    //Construtores da classe GuardaRedes
 
-        public GuardaRedes(String nome, int numero , int velocidade, int resistencia, int destreza, int impulsao, int jogoDeCabeca, int remate, int passe,  int elasticidade, String posicao, ArrayList<String> historial) {
-            super(nome, numero , velocidade, resistencia, destreza, impulsao, jogoDeCabeca, remate, passe,  posicao, historial);
-            this.elasticidade = elasticidade;
-            this.setHabilidade(this.calculateHability());
-        }
+    public GuardaRedes(){
+        super();
+        this.elasticidade = 0;
+    }
 
-        public GuardaRedes(GuardaRedes j){
-            super(j);
-            this.elasticidade = j.getElasticidade();
-        }
+    public GuardaRedes(String nome, int numero , int velocidade, int resistencia, int destreza, int impulsao, int jogoDeCabeca, int remate, int passe,  int elasticidade, String posicao, ArrayList<String> historial) {
+        super(nome, numero , velocidade, resistencia, destreza, impulsao, jogoDeCabeca, remate, passe,  posicao, historial);
+        this.elasticidade = elasticidade;
+        this.setHabilidade(this.calculateHability());
+    }
 
-        public int getElasticidade() {
-            return this.elasticidade;
-        }
+    public GuardaRedes(GuardaRedes j){
+        super(j);
+        this.elasticidade = j.getElasticidade();
+    }
 
-        public void setElasticidade(int elasticidade) {
-            this.elasticidade = elasticidade;
-        }
+    //Getters
 
-        public int calculateHability(){
+    /**
+     *  Método de consulta da variável de instância elasticidade
+     * @return valor da variável de instância elasticidade
+     **/
+
+    public int getElasticidade() {
+        return this.elasticidade;
+    }
+
+    //Setters
+
+    /**
+     *  Método de alteração da variável de instância elasticidade
+     * @param elasticidade novo valor da variável de instância elasticidade
+     **/
+
+    public void setElasticidade(int elasticidade) {
+        this.elasticidade = elasticidade;
+    }
+
+    /**
+     *  Método de cópia de um GuardaRedes
+     * @return cópia do GuardaRedes sobre o qual foi chamado o método
+     **/
+
+    public GuardaRedes clone(){
+        return  new GuardaRedes(this);
+    }
+
+
+
+    /**
+     * @return do valor de Habilidade de um Guarda-Redes
+     **/
+    public int calculateHability(){
             int result = 0;
             result = (int) ((double) this.getVelocidade() * 0.05 +
                             (double) this.getResistencia() * 0.05 +
@@ -43,9 +73,11 @@ public class GuardaRedes extends Jogador{
             return result;
         }
 
-        public GuardaRedes clone(){
-            return  new GuardaRedes(this);
-        }
+    /**
+     *  Método de parse de um GuardaRedes
+     * @param input lido do ficheiro, separando os atributos por virgulas
+     * @return novo GuardaRedes com os atributos especificados
+     **/
 
     public static GuardaRedes parse(String input){
         String[] campos = input.split(",");
