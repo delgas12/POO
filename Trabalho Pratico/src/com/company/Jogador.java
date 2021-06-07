@@ -172,8 +172,9 @@ public abstract class Jogador implements Comparable<Jogador>{
     public void addEquipaToHistorial(String nome){
         this.historial.add(nome);
     }
+
     public String toString(){
-        return "\nEstatísticas do Jogador: \nNumero: "+ this.numero + "\nNome: " + this.nome + "\nHabilidade: " + this.habilidade + "\nHistorial: " + this.historial.toString();/*+
+        return /*"\nEstatísticas do Jogador: Numero: "+ */"\nPosição: " + this.posicao + ", Numero: " + this.numero + ", Nome: " + this.nome + ", Habilidade: " + this.habilidade; /*+ "\nHistorial: " + this.historial.toString();+
                 "\nVelocidade: " + this.velocidade + "\nResistencia: " + this.resistencia +
                 "\nDestreza: " + this.destreza + "\nImpulsão: " + this.impulsao + "\nJogo De Cabeça: " + this.jogoDeCabeca +
                 "\nRemate: " + this.remate + "\nPasse: " + this.passe + "\nPosição: " + this.posicao; + "\nHabilidade: " + this.habilidade +

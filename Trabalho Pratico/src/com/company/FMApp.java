@@ -20,7 +20,7 @@ public class FMApp {
 
         Liga l = new Liga();
 
-        String[] s = {"**** FM_APP ****\n", "Adicionar Jogador", "Adicionar Equipa", "Mudar Jogador de Equipa", "Consultar Equipa", "Consultar Jogador", "Calcular Habilidade Jogador", "Calcular Habilidade Equipa","Jogo","Carregar Estado De Um Ficheiro"};
+        String[] s = {"**** FM_APP ****\n", "Gerir a Liga", "Menu de Consulta","Jogo","Carregar Estado De Um Ficheiro"};
         Menu start = new Menu(s);
         Jogador j;
         String jogadorConsultar = "";
@@ -30,6 +30,50 @@ public class FMApp {
             start.execute();
             getOpt = start.getOption();
             switch (getOpt){
+                case 1:
+                    menuGestao(l);
+                    break;
+                case 2:
+                    menuConsulta(l);
+                    break;
+                case 3:
+                    //chamar o metodo do jogo
+                    menuJogo(l);
+                    break;
+                case 4:
+                    Parser p;
+                    try {
+                        System.out.println("correu");
+                        p = new Parser();
+                        p.parse();
+                        //System.out.println(p.getEquipas().toString());
+                        l.setEquipas(p.getEquipas());
+                        l.setJogos(p.getJogos());
+                        //System.out.println(l.toString());
+                        //System.out.println(l.getEquipa("Mahler Athletic"));
+                        //System.out.println(l.getJogos());
+                    }
+                    catch (LinhaIncorretaException | InsufficientPlayers e) {
+                        System.out.println(e.getMessage());
+                    }
+                    break;
+                case 0:
+                    break;
+            }
+        }
+    }
+
+    private static void menuGestao(Liga l){
+        String[] s = {"Adicionar Jogador", "Adicionar Equipa", "Mudar Jogador de Equipa"};
+        Menu gestao = new Menu(s);
+        int getOpt = -1;
+        String equipa = "";
+        Jogador j;
+        String jogadorConsultar = "";
+        while(getOpt != 0) {
+            gestao.execute();
+            getOpt = gestao.getOption();
+            switch (getOpt) {
                 case 1:
                     String jogador;
                     String[] sjogador;
@@ -73,7 +117,23 @@ public class FMApp {
                     System.out.println(origem.toString());
                     System.out.println(destino.toString());
                     break;
-                case 4:
+
+            }
+        }
+
+    }
+
+    private static void menuConsulta(Liga l){
+        String[] s = {"**** Menu de Consulta ****", "Consultar Equipa", "Consultar Jogador", "Calcular Habilidade Jogador", "Calcular Habilidade Equipa"};
+        Menu consulta = new Menu(s);
+        int getOpt = -1;
+        String equipa = "";
+        String jogadorConsultar = "";
+        while(getOpt != 0){
+            consulta.execute();
+            getOpt = consulta.getOption();
+            switch (getOpt){
+                case 1:
                     equipa = FMView.consultarEquipa();
                     try{
                         FMView.displayEquipa(l.getEquipa(equipa));
@@ -82,7 +142,7 @@ public class FMApp {
                         System.out.println(e.getMessage());
                     }
                     break;
-                case 5:
+                case 2:
                     jogadorConsultar = FMView.consultarJogador();
                     try{
                         FMView.displayJogador(l.consultaJogador(jogadorConsultar));
@@ -91,7 +151,7 @@ public class FMApp {
                         System.out.println(e.getMessage());
                     }
                     break;
-                case 6:
+                case 3:
                     String jogadorHabilidade = FMView.getPlayerForHability();
                     try{
                         FMView.mostraHabilidade(l.consultaJogador(jogadorHabilidade).getHabilidade());
@@ -100,7 +160,7 @@ public class FMApp {
                         System.out.println(e.getMessage());
                     }
                     break;
-                case 7:
+                case 4:
                     equipa = FMView.calculaHabilidade();
                     try{
                         Equipa procura = l.getEquipa(equipa);
@@ -118,29 +178,6 @@ public class FMApp {
                     catch (EquipaNaoExisteException | InsufficientPlayers e){
                         System.out.println(e.getMessage());
                     }
-                    break;
-                case 8:
-                    //chamar o metodo do jogo
-                    menuJogo(l);
-                    break;
-                case 9:
-                    Parser p;
-                    try {
-                        System.out.println("correu");
-                        p = new Parser();
-                        p.parse();
-                        System.out.println(p.getEquipas().toString());
-                        l.setEquipas(p.getEquipas());
-                        l.setJogos(p.getJogos());
-                        //System.out.println(l.toString());
-                        //System.out.println(l.getEquipa("Mahler Athletic"));
-                        //System.out.println(l.getJogos());
-                    }
-                    catch (LinhaIncorretaException | InsufficientPlayers e) {
-                        System.out.println(e.getMessage());
-                    }
-                    break;
-                case 0:
                     break;
             }
         }
@@ -164,6 +201,8 @@ public class FMApp {
                         fora = l.getEquipa(equipas.getValue());
                         j.setEquipaCasa(casa);
                         j.setEquipaFora(fora);
+                        j.setNomeEquipaCasa(casa.getNome());
+                        j.setNomeEquipaFora(casa.getNome());
                     }
                     catch(EquipaNaoExisteException e){
                         System.out.println(e.getMessage());
@@ -238,6 +277,8 @@ public class FMApp {
     }
 
     public static void correJogo(Equipa casa, Equipa fora, Jogo j , Liga l) throws InterruptedException{
+        Map.Entry<String, String> entry;
+        String equipa = null;
         if (casa == null){
             FMView.erros(1);
         }
@@ -267,8 +308,37 @@ public class FMApp {
                 else habFora = -(difHab);
                 habCasa = 0;
             }
+            Equipa eq;
+            int subsCasa = 0, subsFora = 0;
             while (periodos < 18){
                 System.out.println(j.getBola());
+                if (periodos % 2 == 0){
+                    try{
+                        equipa = FMView.pedeSubstituicao();
+                        if (!equipa.equals("")){
+                            if (equipa.equals("casa")){
+                                eq = casa;
+                                subsCasa++;
+                            }
+                            else{
+                                eq = fora;
+                                subsFora++;
+                            }
+                            if (subsCasa > 3) throw new SubstituicaoInvalida("Já gastou o numero de substituições!");
+                            if (subsFora > 3) throw new SubstituicaoInvalida("Já gastou o numero de substituições!");
+                            entry = FMView.pedeJogadoresSub(eq.listaSemTitulares(), eq.getTitularesList());
+                            String in = entry.getKey();
+                            String out = entry.getValue();
+                            j.substituicao(eq, in, out);
+                            l.adicionaEquipa(eq);
+                        }
+                    }
+                    catch (JogadorNaoExiste | SubstituicaoInvalida e){
+                        System.out.println(e.getMessage());
+                    }
+                }
+                habCasa = casa.calculaHabilidadeEquipa();
+                habFora = fora.calculaHabilidadeEquipa();
                 Thread.sleep(2000);
                 j.calculaJogo(habCasa, habFora);
                 periodos++;

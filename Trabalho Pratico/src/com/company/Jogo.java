@@ -14,7 +14,7 @@ public class Jogo {
     private List<Integer> jogadoresFora;
     private Equipa equipaCasa;
     private Equipa equipaFora;
-    Map<Integer, Integer> substituicoesCasa;
+    Map<Integer, Integer> substituicoesCasa; // sai -> entra
     Map<Integer, Integer> substituicoesFora;
     private String bola;
 
@@ -118,6 +118,13 @@ public class Jogo {
 
     public void setGolosCasa(int gCasa){this.golosCasa = gCasa;}
     public void setGolosFora(int gFora){this.golosFora = gFora; }
+
+    public void setNomeEquipaCasa(String nome){
+        this.nomeEquipaCasa = nome;
+    }
+    public void setNomeEquipaFora(String nome){
+        this.nomeEquipaFora = nome;
+    }
 
     public static Jogo parse(String input){
         String[] campos = input.split(",");
@@ -373,8 +380,25 @@ public class Jogo {
         }
     }
 
-    public void substituicao(int jOut, int jIn){
+    public void substituicao(Equipa equipa , String jIn , String jOut) throws JogadorNaoExiste , SubstituicaoInvalida {
+
+        Jogador jogIn = equipa.procuraJogador(jIn);
+        Jogador jogOut = equipa.procuraJogador(jOut);
+
+        if(jogIn == null) throw new JogadorNaoExiste ("" + jIn + " não existe na equipa");
+        if(jogOut == null) throw new JogadorNaoExiste ("" + jOut + " não existe na equipa");
+
+        if (equipa.equals(this.equipaCasa)){
+            if (this.substituicoesCasa.containsKey(jogIn.getNumeroJogador())) throw new SubstituicaoInvalida("Jogador a entrar já foi substituido e não pode voltar a entrar no jogo");
+            else {
+                equipa.substituiEquipa(jogIn, jogOut);
+            }
+        }else{
+            if (this.substituicoesFora.containsKey(jogIn.getNumeroJogador())) throw new SubstituicaoInvalida("Jogador a entrar já foi substituido e não pode voltar a entrar no jogo");
+            else {
+                equipa.substituiEquipa(jogIn, jogOut);
+            }
+        }
 
     }
-
 }

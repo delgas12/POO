@@ -161,4 +161,35 @@ public class FMView {
             case 4 -> System.out.println("Ainda não escolheu os jogadores da quipa de Fora");
         }
     }
+
+    public static String pedeSubstituicao(){
+        Scanner sc = new Scanner(System.in);
+        String equipa = "";
+        Map.Entry<String, Map.Entry<String, String>> res = null;
+        System.out.print("Deseja fazer substituicao? (Sim/Nao) ");
+        String sub = sc.nextLine();
+        sub = sub.toLowerCase(Locale.ROOT);
+        if (sub.equals("sim")){
+            System.out.print("Para que equipa? (Casa/Fora) ");
+            equipa = sc.nextLine();
+        }
+        return equipa;
+    }
+
+    public static Map.Entry<String, String> pedeJogadoresSub(List<Jogador> listJog, List<Jogador> titulares){
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Lista do Banco:");
+        displayListJog(listJog);
+        System.out.print("Qual o Jogador que vai entrar?");
+        String jIn = sc.nextLine();
+        System.out.print("Lista os Titulares:");
+        displayListJog(titulares);
+        System.out.print("Qual o Jogador que vai sair?");
+        String jOut = sc.nextLine();
+        return new AbstractMap.SimpleEntry<>(jIn, jOut);
+    }
+
+    public static void displayListJog(List<Jogador> listJog){
+        System.out.println(listJog.toString());
+    }
 }

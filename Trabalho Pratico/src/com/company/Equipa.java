@@ -233,7 +233,7 @@ public class Equipa implements Comparable<Equipa>{
             listaNaoAdicionados.remove(auxJogador.getNumeroJogador());
             counter_defesas++;
         }
-        result.put("Defesas", aux);
+        result.put("Defesa", aux);
         aux = result.get("Lateral");
         while (counter_laterais < nLaterais){
             auxJogador = new ArrayList<>(listaNaoAdicionados.values()).get(0);
@@ -265,6 +265,48 @@ public class Equipa implements Comparable<Equipa>{
         }
         this.titulares = result;
         System.out.println(result.toString());
+    }
+
+    public void substituiEquipa(Jogador in, Jogador out) throws SubstituicaoInvalida{
+        Iterator<Map.Entry<String, List<Jogador>>> it = this.titulares.entrySet().iterator();
+        List<Jogador> aux;
+        Map.Entry<String, List<Jogador>> entry;
+        String posicao = "";
+        boolean encontrouOut = false, encontrouIn = false;
+        while (it.hasNext()){
+            entry = it.next();
+            aux = entry.getValue();
+            if (aux.contains(out)){
+                encontrouOut = true;
+                aux.remove(out);
+                posicao = entry.getKey();
+            }
+            if (aux.contains(in)){
+                encontrouIn = true;
+                throw new SubstituicaoInvalida("Jogador" + in.getNome() + "já consta nos titulares");
+            }
+        }
+        if (!encontrouOut) throw new SubstituicaoInvalida("Jogador " + out.getNome() + "não consta da lista dos titulares");
+        if (!in.getPosicao().equals(posicao)){
+            in.setHabilidade((int) (in.getHabilidade()*0.7));
+            in.setPosicao(posicao);
+        }
+        aux = this.titulares.get(posicao);
+        aux.add(in);
+        this.titulares.put(posicao, aux);
+    }
+
+    public List<Jogador> listaSemTitulares(){
+        List<Jogador> aux = new ArrayList<>(this.jogadores.values());
+        Iterator<Map.Entry<String, List<Jogador>>> it = this.titulares.entrySet().iterator();
+        Map.Entry<String, List<Jogador>> entry;
+        while (it.hasNext()){
+            entry = it.next();
+            for (Jogador j : entry.getValue()){
+                aux.remove(j);
+            }
+        }
+        return aux.stream().map(Jogador::clone).collect(Collectors.toList());
     }
 
     public Equipa clone(){
