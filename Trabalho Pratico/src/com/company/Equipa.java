@@ -9,21 +9,21 @@ import static java.lang.Thread.sleep;
 public class Equipa implements Comparable<Equipa>{
     private String nome;
     private Map<Integer, Jogador> jogadores;
-    private List<Jogador> titulares;
+    private Map<String,List<Jogador>> titulares;
     private int habilidade;
 
 
     public Equipa(){
         this.nome = "";
         this.jogadores = new HashMap<>();
-        this.titulares = new ArrayList<>();
+        this.titulares = new HashMap<>();
         this.habilidade = 0;
     }
 
     public Equipa(String name){
         this.nome = name;
         this.jogadores = new HashMap<>();
-        this.titulares = new ArrayList<>();
+        this.titulares = new HashMap<>();
         this.habilidade = 0;
     }
 
@@ -49,13 +49,33 @@ public class Equipa implements Comparable<Equipa>{
         return this.jogadores.get(procura.getNumeroJogador());
     }
 
-    public List<Jogador> getTitulares(){
-        return this.titulares.stream().map(Jogador::clone).collect(Collectors.toList());
+    public Map<String, List<Jogador>> getTitulares(){
+        List<Jogador> aux;
+        Map<String, List<Jogador>> result = new HashMap<>();
+        Iterator<Map.Entry<String,List<Jogador>>> it = this.titulares.entrySet().iterator();
+        while(it.hasNext()){
+            Map.Entry<String,List<Jogador>> entry = it.next();
+            aux = entry.getValue().stream().map(Jogador::clone).collect(Collectors.toList());
+            result.put(entry.getKey(), aux);
+        }
+        return result;
+    }
+
+    public List<Jogador> getTitularesList(){
+        List<Jogador> aux = new ArrayList<>();
+        Iterator<Map.Entry<String,List<Jogador>>> it = this.titulares.entrySet().iterator();
+        while (it.hasNext()){
+            for (Jogador j : it.next().getValue()){
+                aux.add(j.clone());
+            }
+        }
+        return aux;
     }
 
     public int getHabilidade(){
         return this.habilidade;
     }
+
 
     //Setters
 
@@ -111,7 +131,7 @@ public class Equipa implements Comparable<Equipa>{
     public String toString() {
         return "Equipa{" +
                 "Nome: " + this.nome +
-                "\n\nJogadores =\n\n" + this.jogadores.toString() +
+                //"\n\nJogadores =\n\n" + this.jogadores.toString() +
                 "\n\n\n\ntitulares =" + this.titulares.toString() + "}";
     }
 
@@ -123,14 +143,25 @@ public class Equipa implements Comparable<Equipa>{
     }
 
     public int calculaHabilidadeEquipa (){
-        int habilidadeCumulativa = this.titulares.stream().mapToInt(j -> j.getHabilidade()).sum();
+        int habilidadeCumulativa = 0;
+        Iterator<Map.Entry<String,List<Jogador>>> it = this.titulares.entrySet().iterator();
+        while (it.hasNext()){
+            for (Jogador j : it.next().getValue()){
+                habilidadeCumulativa += j.getHabilidade();
+            }
+        }
         this.habilidade = habilidadeCumulativa/11;
         return (habilidadeCumulativa/11);
     }
 
     public void adicionaTitularesEquipa(List<Integer> titulares){
+        List<Jogador> aux;
+        Jogador jog;
         for (Integer i : titulares){
-            this.titulares.add(this.jogadores.get(i));
+            jog = this.jogadores.get(i);
+            String pos = jog.getPosicao();
+            aux = this.titulares.get(pos);
+            aux.add(jog.clone());
         }
     }
 
@@ -139,34 +170,101 @@ public class Equipa implements Comparable<Equipa>{
     public void criaInicial (int nDefesas , int nLaterais,int nMedios, int nAvancados) throws InsufficientPlayers{
         int total = nDefesas + nLaterais + nMedios + nAvancados;
         if (total != 10) throw new InsufficientPlayers("Número de jogadores diferente de 11");
-        List<Jogador> result = new ArrayList<>();
-        int counter = 0;
+        Map<Integer, Jogador> listaNaoAdicionados = this.jogadores.values().stream().collect(Collectors.toMap(Jogador::getNumeroJogador, Jogador::clone));
+        List<Jogador> aux = null;
+        Jogador auxJogador;
+        Map<String, List<Jogador>> result = new HashMap<>();
+        int counter_defesas = 0, counter_laterais = 0, counter_medios = 0, counter_avancados = 0;
         Jogador grTeam = this.jogadores.values().stream().filter(j -> j instanceof GuardaRedes).findFirst().orElse(null);
-        result.add(grTeam.clone());
+        if(grTeam != null) {
+            aux = new ArrayList<>();
+            aux.add(grTeam.clone());
+            result.put(grTeam.getPosicao(),aux);
+        }
         List <Jogador> defesas = this.jogadores.values().stream().filter(j -> j instanceof Defesa).map(Jogador::clone).sorted().collect(Collectors.toList());
         List <Jogador> laterais = this.jogadores.values().stream().filter(j -> j instanceof Lateral).map(Jogador::clone).sorted().collect(Collectors.toList());
         List <Jogador> medios = this.jogadores.values().stream().filter(j -> j instanceof Medio).map(Jogador::clone).sorted().collect(Collectors.toList());
         List <Jogador> avancados = this.jogadores.values().stream().filter(j -> j instanceof Avancado).map(Jogador::clone).sorted().collect(Collectors.toList());
-        for(counter = 0 ; counter < nDefesas &&  counter < defesas.size(); counter++) {
-            result.add(defesas.get(counter));
+
+        aux = result.get("Defesa");
+        for(counter_defesas = 0 ; counter_defesas < nDefesas &&  counter_defesas < defesas.size(); counter_defesas++) {
+            if (aux == null) aux = new ArrayList<>();
+            auxJogador = defesas.get(counter_defesas);
+            aux.add(auxJogador);
+            listaNaoAdicionados.remove(auxJogador.getNumeroJogador());
         }
-        if(counter < 2) throw new InsufficientPlayers("Há Defesas em falta");
-        counter = 0;
-        for (;counter < laterais.size() && counter < nLaterais ; counter++){
-            result.add(laterais.get(counter));
+        result.put("Defesa",aux);
+        aux = result.get("Lateral");
+        for (counter_laterais = 0;counter_laterais < laterais.size() && counter_laterais < nLaterais ; counter_laterais++){
+            if (aux == null) aux = new ArrayList<>();
+            auxJogador = laterais.get(counter_laterais);
+            aux.add(auxJogador);
+            listaNaoAdicionados.remove(auxJogador.getNumeroJogador());
         }
-        if(counter < 2) throw new InsufficientPlayers("Há Laterais em falta");
-        counter = 0;
-        for (  ;counter < medios.size() && counter < nMedios; counter++){
-            result.add(medios.get(counter));
+        result.put("Lateral", aux);
+        aux = result.get("Medio");
+        for (counter_medios = 0; counter_medios < medios.size() && counter_medios < nMedios; counter_medios++){
+            if (aux == null) aux = new ArrayList<>();
+            auxJogador = medios.get(counter_medios);
+            aux.add(auxJogador);
+            listaNaoAdicionados.remove(auxJogador.getNumeroJogador());
         }
-        if(counter < 2) throw new InsufficientPlayers("Há Medios em falta");
-        counter = 0;
-        for (; counter < nAvancados && counter < avancados.size(); counter++){
-            result.add(avancados.get(counter));
+        result.put("Medio", aux);
+        aux = result.get("Avancado");
+        for (counter_avancados = 0; counter_avancados < nAvancados && counter_avancados < avancados.size(); counter_avancados++){
+            if (aux == null) aux = new ArrayList<>();
+            auxJogador = avancados.get(counter_avancados);
+            aux.add(auxJogador);
+            listaNaoAdicionados.remove(auxJogador.getNumeroJogador());
         }
-        if(counter < 3) throw new InsufficientPlayers("Há Avançados em falta");
+        result.put("Avancado", aux);
+        if (grTeam == null) {
+            aux = new ArrayList<>();
+            auxJogador = new ArrayList<>(listaNaoAdicionados.values()).get(0);
+            aux.add(auxJogador);
+            result.put("Guarda-Redes", aux);
+        }
+        aux = result.get("Defesa");
+        while (counter_defesas < nDefesas){
+            auxJogador = new ArrayList<>(listaNaoAdicionados.values()).get(0);
+            auxJogador.setHabilidade((int) (auxJogador.getHabilidade()*0.7));
+            auxJogador.setPosicao("Defesa");
+            aux.add(auxJogador);
+            listaNaoAdicionados.remove(auxJogador.getNumeroJogador());
+            counter_defesas++;
+        }
+        result.put("Defesas", aux);
+        aux = result.get("Lateral");
+        while (counter_laterais < nLaterais){
+            auxJogador = new ArrayList<>(listaNaoAdicionados.values()).get(0);
+            auxJogador.setHabilidade((int) (auxJogador.getHabilidade()*0.7));
+            auxJogador.setPosicao("Lateral");
+            aux.add(auxJogador);
+            listaNaoAdicionados.remove(auxJogador.getNumeroJogador());
+            counter_laterais++;
+        }
+        result.put("Lateral", aux);
+        aux = result.get("Medio");
+        while (counter_medios < nMedios){
+            auxJogador = new ArrayList<>(listaNaoAdicionados.values()).get(0);
+            auxJogador.setHabilidade((int) (auxJogador.getHabilidade()*0.7));
+            auxJogador.setPosicao("Medio");
+            aux.add(auxJogador);
+            listaNaoAdicionados.remove(auxJogador.getNumeroJogador());
+            counter_medios++;
+        }
+        result.put("Medio", aux);
+        aux = result.get("Avancado");
+        while (counter_avancados < nAvancados){
+            auxJogador = new ArrayList<>(listaNaoAdicionados.values()).get(0);
+            auxJogador.setHabilidade((int) (auxJogador.getHabilidade()*0.7));
+            auxJogador.setPosicao("Avancado");
+            aux.add(auxJogador);
+            listaNaoAdicionados.remove(auxJogador.getNumeroJogador());
+            counter_avancados++;
+        }
         this.titulares = result;
+        System.out.println(result.toString());
     }
 
     public Equipa clone(){

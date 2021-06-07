@@ -3,6 +3,7 @@ package com.company;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 // Wagner Athletic
 // Sporting Club Schubert
@@ -146,7 +147,7 @@ public class FMApp {
     }
 
     private static void menuJogo(Liga l) {
-        String[] s = {"**** Menu Jogo ****\n", "Escolher Equipas", "Escolher Titulares Casa" , "Escolher Titulares Fora", "Jogar"};
+        String[] s = {"**** Menu Jogo ****\n", "Escolher Equipas", "Escolher Titulares Casa" , "Escolher Titulares Fora", "Jogar", "Desforra", "Novo Jogo"};
         Menu jogo = new Menu(s);
         Jogo j = new Jogo();
         Equipa casa = null;
@@ -171,45 +172,108 @@ public class FMApp {
                     break;
                 case 2:
                     if (casa != null){
-                        j.setJogadoresCasa(FMView.mostraJogadores(j.getEquipaCasa()));
-                        j.adicionaTitularesCasaJogo();
+                        try {
+                            String tatica = FMView.pedeAlinhamento();
+                            String[] posicoes = tatica.split("-");
+                            casa.criaInicial(Integer.parseInt(posicoes[0]), Integer.parseInt(posicoes[1]), Integer.parseInt(posicoes[2]), Integer.parseInt(posicoes[3]));
+                            casa.calculaHabilidadeEquipa();
+                            j.setJogadoresCasa(casa.getTitularesList().stream().map(jog -> jog.getNumeroJogador()).collect(Collectors.toList()));
+                            //j.setJogadoresCasa(FMView.mostraJogadores(j.getEquipaCasa()));
+                            //j.adicionaTitularesCasaJogo();
+                            l.adicionaEquipa(casa);
+                            FMView.displayEquipa(casa);
+                        }
+                        catch (InsufficientPlayers e){
+                            System.out.println(e.getMessage());
+                        }
                     }
                     else FMView.erros(1);
-
                     break;
                 case 3:
                     if (fora != null){
-                        j.setJogadoresFora(FMView.mostraJogadores(j.getEquipaFora()));
-                        j.adicionaTitularesForaJogo();
+                        try {
+                            String tatica = FMView.pedeAlinhamento();
+                            String[] posicoes = tatica.split("-");
+                            fora.criaInicial(Integer.parseInt(posicoes[0]), Integer.parseInt(posicoes[1]), Integer.parseInt(posicoes[2]), Integer.parseInt(posicoes[3]));
+                            fora.calculaHabilidadeEquipa();
+                            j.setJogadoresFora(fora.getTitularesList().stream().map(jog -> jog.getNumeroJogador()).collect(Collectors.toList()));
+                            //j.setJogadoresFora(FMView.mostraJogadores(j.getEquipaFora()));
+                            //j.adicionaTitularesForaJogo();
+                            l.adicionaEquipa(fora);
+                            FMView.displayEquipa(fora);
+                        }
+                        catch (InsufficientPlayers e){
+                            System.out.println(e.getMessage());
+                        }
+
                     }
                     else FMView.erros(2);
                     break;
                 case 4:
-                    if (casa == null){
-                        FMView.erros(1);
+                    try{
+                        FMApp.correJogo(casa, fora, j, l);
                     }
-                    else if (fora == null){
-                        FMView.erros(2);
+                    catch (InterruptedException e){
+                        System.out.println(e.getMessage());
                     }
-                    else if (j.getJogadoresCasa().size() == 0){
-                        FMView.erros(3);
+                    break;
+                case 5:
+                    try{
+                        j.setGolosCasa(0);
+                        j.setGolosFora(0);
+                        FMApp.correJogo(casa, fora, j, l);
                     }
-                    else if (j.getJogadoresFora().size() == 0){
-                        FMView.erros(4);
+                    catch (InterruptedException e){
+                        System.out.println(e.getMessage());
                     }
-                    else{
-                        int periodos = 0;
-                        int subs = 0;
-                        while (periodos < 18){
-                            j.calculaJogo();
-                            System.out.println(j.getBola());
-                            periodos++;
-                        }
-                    }
+                    break;
+                case 6:
+                    l.adicionaJogo(j);
+                    j = new Jogo();
                     break;
             }
         }
 
 
+    }
+
+    public static void correJogo(Equipa casa, Equipa fora, Jogo j , Liga l) throws InterruptedException{
+        if (casa == null){
+            FMView.erros(1);
+        }
+        else if (fora == null){
+            FMView.erros(2);
+        }
+        else if (j.getJogadoresCasa().size() == 0){
+            FMView.erros(3);
+        }
+        else if (j.getJogadoresFora().size() == 0){
+            FMView.erros(4);
+        }
+        else{// 68 65
+            int periodos = 0;
+            int habCasa = casa.calculaHabilidadeEquipa();
+            int habFora = fora.calculaHabilidadeEquipa();
+            int difHab = habCasa - habFora;
+            System.out.println("A Habilidade de " + casa.getNome() + " é: " + habCasa);
+            System.out.println("A Habilidade de " + fora.getNome() + " é: " + habFora);
+            if (difHab > 0){
+                if (difHab > 5) habCasa = 5;
+                else habCasa = difHab;
+                habFora = 0;
+            }
+            else{
+                if (difHab < -5) habFora = 5;
+                else habFora = -(difHab);
+                habCasa = 0;
+            }
+            while (periodos < 18){
+                System.out.println(j.getBola());
+                Thread.sleep(2000);
+                j.calculaJogo(habCasa, habFora);
+                periodos++;
+            }
+            System.out.println(casa.getNome() + " " + j.getGolosCasa() + " - "  + j.getGolosFora() +  " " + fora.getNome() );
+        }
     }
 }

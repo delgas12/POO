@@ -116,6 +116,9 @@ public class Jogo {
         this.jogadoresFora = new ArrayList<>(jogFora);
     }
 
+    public void setGolosCasa(int gCasa){this.golosCasa = gCasa;}
+    public void setGolosFora(int gFora){this.golosFora = gFora; }
+
     public static Jogo parse(String input){
         String[] campos = input.split(",");
         String[] data = campos[4].split("-");
@@ -182,33 +185,35 @@ public class Jogo {
     //Casa X
     //Fora Y
 
-    public void calculaJogo() {
+    public void calculaJogo(int casa, int fora) {
         Random rand = new Random();
         int rand_int = rand.nextInt(100);
+        int favoreceCasa = (casa-fora);
+        int favoreceFora = (fora-casa);
         switch (this.bola) {
             case "Canto Fora":
-                this.cantoFora(rand_int, 10,25,25,25,15);
+                this.cantoFora(rand_int, 10 + favoreceCasa,25 + favoreceCasa,25 + favoreceFora,25 + favoreceFora,15);
                 break;
             case "Pontape de Baliza Fora":
                 this.pbFora(rand_int,50,35,15);
                 break;
             case "Area Fora":
-                this.areaFora(rand_int, 10, 20, 20, 30, 15, 5);
+                this.areaFora(rand_int, 10 + favoreceCasa, 20 + favoreceCasa, 20 + favoreceFora, 30 + favoreceFora, 5, 15);
                 break;
             case "Defesa Fora":
-                this.defesaFora(rand_int, 5,40,10,10,25,10);
+                this.defesaFora(rand_int, 5 + favoreceCasa,40 + favoreceCasa,10 + favoreceCasa,10 + favoreceFora,25 + favoreceFora,10 + favoreceFora);
                 break;
             case "Meio Campo":
-                this.meioCampo(rand_int,2,2,18,18,30,30);
+                this.meioCampo(rand_int,2,2,18 + favoreceFora,18 + favoreceCasa,30 + favoreceCasa,30 + favoreceFora);
                 break;
             case "Defesa Casa":
-                this.defesaCasa(rand_int, 5, 40, 10, 10, 25, 10);
+                this.defesaCasa(rand_int, 5 + favoreceFora, 40 + favoreceCasa, 10 + favoreceCasa, 10 + favoreceFora, 25 + favoreceFora, 10 + favoreceCasa);
                 break;
             case "Area Casa":
-                this.areaCasa(rand_int, 10, 30, 50, 80, 95, 5);
+                this.areaCasa(rand_int, 10 + favoreceFora, 20 + favoreceFora, 20 + favoreceCasa, 30, 15, 5);
                 break;
             case "Canto Casa":
-                this.cantoCasa(rand_int, 10, 25, 25, 25, 15);
+                this.cantoCasa(rand_int, 10 + favoreceFora, 25 + favoreceFora, 25 + favoreceCasa , 25 + favoreceCasa, 15);
             case "Pontape de Baliza Casa":
                 this.pbCasa(rand_int, 50, 35, 15);
                 break;
@@ -218,6 +223,7 @@ public class Jogo {
     public void cantoFora(int rand_int, int goloCasa, int cantoFora, int pbFora, int defesaFora, int meioCampo){
         if (rand_int <= goloCasa) {
             this.golosCasa++;
+            System.out.println("GOLO CARALHO");
             this.bola = "Meio Campo";
         } else if (rand_int <= goloCasa + cantoFora){
             this.bola = "Canto Fora";
@@ -243,6 +249,8 @@ public class Jogo {
     public void areaFora(int rand_int, int goloCasa, int cantoFora, int pbFora, int defesaFora, int defesaCasa, int meioCampo){
         if (rand_int <= goloCasa) {
             this.golosCasa++;
+            System.out.println("GOLO CARALHO");
+
             this.bola = "Meio Campo";
         } else if (rand_int <= goloCasa + cantoFora) {
             this.bola = "Canto Fora";
@@ -260,6 +268,8 @@ public class Jogo {
     public void defesaFora(int rand_int, int goloCasa, int areaFora, int cantoFora, int pbFora, int defesaCasa, int meioCampo){
         if (rand_int <= goloCasa) {
             this.golosCasa++;
+            System.out.println("GOLO CARALHO");
+
             this.bola = "Meio Campo";
         } else if (rand_int <= goloCasa + areaFora) {
             this.bola = "Area Fora";
@@ -277,6 +287,8 @@ public class Jogo {
     public void meioCampo(int rand_int, int goloCasa, int goloFora, int areaCasa, int areaFora, int defesaFora, int defesaCasa){
         if (rand_int <= goloCasa) {
             this.golosCasa++;
+            System.out.println("GOLO CARALHO");
+
             this.bola = "Meio Campo";
         } else if (rand_int <= goloCasa + goloFora) {
             this.golosFora++;
@@ -292,28 +304,32 @@ public class Jogo {
         }
     }
 
-    public void defesaCasa (int rand_int, int goloCasa, int meioCampo, int pbCasa, int cantoCasa, int areaCasa, int defesaFora){
-        if (rand_int <= goloCasa) {
+    public void defesaCasa (int rand_int, int goloFora, int meioCampo, int pbCasa, int cantoCasa, int areaCasa, int defesaFora){
+        if (rand_int <= goloFora) {
             this.golosCasa++;
+            System.out.println("GOLO CARALHO");
+
             this.bola = "Meio Campo";
-        } else if (rand_int <= goloCasa + meioCampo) {
+        } else if (rand_int <= goloFora + meioCampo) {
             this.bola = "Meio Campo";
-        } else if (rand_int <= goloCasa + meioCampo + pbCasa) {
+        } else if (rand_int <= goloFora + meioCampo + pbCasa) {
             this.bola = "Pontape de Baliza Casa";
-        } else if (rand_int <= goloCasa + meioCampo + pbCasa + cantoCasa) {
+        } else if (rand_int <= goloFora + meioCampo + pbCasa + cantoCasa) {
             this.bola = "Canto Casa";
-        } else if (rand_int <= goloCasa + meioCampo + pbCasa + cantoCasa + areaCasa) {
+        } else if (rand_int <= goloFora + meioCampo + pbCasa + cantoCasa + areaCasa) {
             this.bola = "Area Casa";
         } else {
             this.bola = "Defesa Fora";
         }
     }
 
-    public void areaCasa(int rand_int, int goloCasa, int cantoCasa, int pbCasa, int defesaCasa, int meioCampo, int defesaFora){
+    public void areaCasa(int rand_int, int goloFora, int cantoCasa, int pbCasa, int defesaCasa, int meioCampo, int defesaFora){
         if (rand_int <= cantoCasa) {
-            this.golosCasa++;
+            this.golosFora++;
+            System.out.println("GOLO CARALHO");
+
             this.bola = "Meio Campo";
-        } else if (rand_int <= goloCasa) {
+        } else if (rand_int <= goloFora) {
             this.bola = "Canto Casa";
         } else if (rand_int <= cantoCasa + pbCasa ) {
             this.bola = "Pontape de Baliza Casa";
@@ -336,18 +352,20 @@ public class Jogo {
         }
     }
 
-    public void cantoCasa(int rand_int, int golo, int cantoCasa, int pbCasa, int defesaCasa, int meioCampo){
-        if (rand_int <= golo){
+    public void cantoCasa(int rand_int, int goloFora, int cantoCasa, int pbCasa, int defesaCasa, int meioCampo){
+        if (rand_int <= goloFora){
             this.golosFora++;
+            System.out.println("GOLO CARALHO");
+
             this.bola = "Meio Campo";
         }
-        else if (rand_int <= golo + cantoCasa){
+        else if (rand_int <= goloFora + cantoCasa){
             this.bola = "Canto Casa";
         }
-        else if (rand_int <= golo + cantoCasa + pbCasa){
+        else if (rand_int <= goloFora + cantoCasa + pbCasa){
             this.bola = "Pontape de Baliza Casa";
         }
-        else if (rand_int <= golo + cantoCasa + pbCasa + defesaCasa){
+        else if (rand_int <= goloFora + cantoCasa + pbCasa + defesaCasa){
             this.bola = "Defesa Casa";
         }
         else{

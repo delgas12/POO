@@ -15,7 +15,7 @@ public class Parser {
     private  List<Jogo> jogos;
 
     public void parse() throws LinhaIncorretaException, InsufficientPlayers {
-        List<String> linhas = lerFicheiro("POO/logs.txt");
+        List<String> linhas = lerFicheiro("./logs.txt");
         System.out.println(linhas.toString());
         this.equipas = new HashMap<>(); //nome, equipa
         Map<Integer, Jogador> jogadores = new HashMap<>(); //numero, jogador

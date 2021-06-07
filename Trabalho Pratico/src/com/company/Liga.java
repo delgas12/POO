@@ -112,6 +112,10 @@ public class Liga {
         this.equipas.put(equipa.getNome(), equipa.clone());
     }
 
+    public void adicionaJogo(Jogo jogo){
+        this.jogos.add(jogo.clone());
+    }
+
     public String equipasToString(){
         Iterator<Map.Entry<String,Equipa>> it = equipas.entrySet().iterator();
         StringBuilder equipas = new StringBuilder("Equipas");
