@@ -131,8 +131,7 @@ public class Equipa implements Comparable<Equipa>, Serializable {
     public String toString() {
         return "Equipa{" +
                 "Nome: " + this.nome +
-                //"\n\nJogadores =\n\n" + this.jogadores.toString() +
-                "\n\n\n\ntitulares =" + this.titulares.toString() + "}";
+                "\ntitulares =" + this.titulares.toString() + "}";
     }
 
 
@@ -266,6 +265,7 @@ public class Equipa implements Comparable<Equipa>, Serializable {
      **/
     public void criaInicial (int nDefesas , int nLaterais,int nMedios, int nAvancados) throws InsufficientPlayers{
         int total = nDefesas + nLaterais + nMedios + nAvancados;
+        if (this.jogadores.size() < 11) throw new InsufficientPlayers("Não é possível calcular a habilidade de uma equipa com menos de 11 jogadores!");
         if (total != 10) throw new InsufficientPlayers("Número de jogadores diferente de 11");
         Map<Integer, Jogador> listaNaoAdicionados = this.jogadores.values().stream().collect(Collectors.toMap(Jogador::getNumeroJogador, Jogador::clone));
         List<Jogador> aux = null;
@@ -292,7 +292,7 @@ public class Equipa implements Comparable<Equipa>, Serializable {
         }
         result.put("Defesa",aux);
         aux = result.get("Lateral");
-        for (counter_laterais = 0;counter_laterais < laterais.size() && counter_laterais < nLaterais ; counter_laterais++){
+        for (counter_laterais = 0; counter_laterais < laterais.size() && counter_laterais < nLaterais ; counter_laterais++){
             if (aux == null) aux = new ArrayList<>();
             auxJogador = laterais.get(counter_laterais);
             aux.add(auxJogador);

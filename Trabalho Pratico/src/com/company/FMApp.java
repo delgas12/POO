@@ -37,7 +37,7 @@ public class FMApp {
                 case 4:
                     Parser p;
                     try {
-                        System.out.println("correu");
+                        FMView.parseCompleto();
                         p = new Parser();
                         p.parse();
                         l.setEquipas(p.getEquipas());
@@ -79,7 +79,7 @@ public class FMApp {
         Menu gestao = new Menu(s);
         int getOpt = -1;
         String equipa = "";
-        Jogador j;
+        Jogador j = null;
         String jogadorConsultar = "";
         while(getOpt != 0) {
             gestao.execute();
@@ -92,17 +92,15 @@ public class FMApp {
                         Map.Entry<String, Jogador> entry = FMView.getPlayer();
                         j = entry.getValue();
                         equipa = entry.getKey();
-                    }
-                    catch(CamposInvalidos e){
-                        System.out.println(e.getMessage());
-                        break;
-                    }
-                    try{
                         l.addJogador(j, equipa);
                         FMView.displayHabilidadeJogador(l.getJogadorLiga(equipa, j));
                     }
-                    catch(EquipaNaoExisteException | JogadorNaoExiste | NumeroNaoDisponivel e){
+                    catch(CamposInvalidos | EquipaNaoExisteException | JogadorNaoExiste | NumeroNaoDisponivel e){
                         System.out.println(e.getMessage());
+                        break;
+                    }
+                    catch(NumberFormatException e){
+                        System.out.println("Introduza os atributos sem espaços!");
                     }
                     break;
                 case 2:
