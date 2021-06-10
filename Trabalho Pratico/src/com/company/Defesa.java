@@ -1,8 +1,9 @@
 package com.company;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Defesa extends Jogador{
+public class Defesa extends Jogador implements Serializable {
 
     private int forca;
 
@@ -116,6 +117,15 @@ public class Defesa extends Jogador{
 
     }
 
+    /**
+     * Método de representação das habilidades do Jogador com o atributo especial do defesa sob a forma de uma String
+     * @return String com a representação das habilidades do defesa
+     **/
+
+    public String toStringHabilidades(){
+        return super.toStringHabilidades() +
+                "\nForça: "   + this.forca ;
+    }
 
 
 }

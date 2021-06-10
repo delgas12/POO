@@ -1,10 +1,15 @@
 package com.company;
 
 import java.security.Guard;
+import java.sql.SQLOutput;
 import java.util.*;
 
 public class FMView {
 
+    /**
+     *  Metodo responsÁvel por construir e executar o Menu De Gestão
+     * @return um par com a equipa do jogador e o objeto Jogador respetivo
+     **/
 
     public static Map.Entry<String,Jogador> getPlayer() throws CamposInvalidos{
         Jogador j = null ;
@@ -50,19 +55,25 @@ public class FMView {
        return new AbstractMap.SimpleEntry(equipa, j);
     }
 
+    /**
+     *
+     *
+     * Thread.sleep(2000)
+     * @return um par com a equipa do jogador e o objeto Jogador respetivo
+     **/
+
     private static boolean checkPosition(String pos){
         return pos.equals("defesa") || pos.equals("avançado") || pos.equals("lateral") || pos.equals("medio") || pos.equals("guardaredes");
     }
 
-    private static String getDefesaAtributes(String pos){
-        Scanner sp = new Scanner(System.in);
+    /**
+    *  Metodo responsÁvel por construir e executar o Menu De Gestão
+    * @return um par com a equipa do jogador e o objeto Jogador respetivo
+    **/
 
-        System.out.println("Introduzir atributos do jogador");
-        return sp.nextLine();
-    }
 
     public static String getEquipa(){
-        System.out.print("Insira o nome da equipa que pretende adicionar:");
+        System.out.print("Insira o nome da equipa a adicionar:");
         Scanner sc = new Scanner(System.in);
         return sc.nextLine();
     }
@@ -96,6 +107,10 @@ public class FMView {
 
     public static void displayJogador(Jogador j){
         System.out.println(j.toString());
+    }
+
+    public static void displayHabilidadeJogador(Jogador j){
+        System.out.println(j.toStringHabilidades());
     }
 
     public static String getPlayerForHability(){
@@ -193,55 +208,59 @@ public class FMView {
         System.out.println(listJog.toString());
     }
 
-    public static void displayJogadas(String bolaAntes, String bolaDepois, int result){
+    public static void infoInicioJogo(String casa, String fora, int habCasa, int habFora){
+        System.out.println(casa + "(" + habCasa + ") - " + fora + " (" + habFora + ")");
+    }
+
+    public static void displayJogadas(String bolaAntes, String bolaDepois, int result, String casa, String fora){
         Random rand = new Random();
         int rand_int = rand.nextInt(3);
-        String[] pBFParaMeioCampo = {"Pontapé de baliza para a equipa da casa vai para o meio campo", "O Guarda Redes lança a jogada para o meio campo!", "Guarda Redes joga longo para a zona média do campo"};
+        String[] pBFParaMeioCampo = {"Pontapé de baliza para " + casa +"vai para o meio campo", "O Guarda Redes lança a jogada para o meio campo!", "Guarda Redes joga longo para a zona média do campo"};
         String[] pBFParaDefFora = {"Guarda Redes decide jogar curto nos defesas", "Bola para os defesas", "Jogada curta pelo Guarda Redes"};
         String[] pBFParaDefCasa = {"Guarda Redes bate longo!", "Guarda Redes joga a bola diretamente para o ataque!", "Bola na frente!"};
         String[] pBCParaMeioCampo = {"Guarda Redes joga no meio campo!", "Guarda Redes mete a bola no meio campo!", "Guarda Redes mete a bola em jogo!"};
         String[] pBCParaDefFora = {"Guarda Redes joga longo!", "Atira para longe ! Grande Guardião!!", "Bola metida no ataque!"};
         String[] pBCParaDefCasa = {"Guarda Redes decide jogar curto nos defesas", "Bola para os defesas", "Jogada curta pelo Guarda Redes"};
         String[] cantoForaParaMeioCampoGolo= {"Golo de cabeça do central!!", "Mas que golaço de pontapé de bicicleta!", "Autogolo! Como é possível!"};
-        String[] cantoForaParaMeioCampo = {"Bola aliviada pelos defesas!", "Canto da equipa da casa não dá em nada!", "Guarda Redes soqueia a bola para longe!"};
-        String[] cantoForaParaCantoFora = {"A bola acaba na bancada , desviada por um defesa!","A defesa atira para fora!", "UI! UI! Partiram a camera do fotógrafo, e é novo canto para a equipa da casa!"};
-        String[] cantoForaParaPBF = {"Canto não dá em nada! Pontapé de baliza para a equipa da casa!", "Mas que desastre! O central não dá uma para a caixa!"};
-        String[] cantoForaParaDefFora = {"Alívio do central!", "O Guarda Redes alivia com os punhos!", "Equipa visitante recupera a posse e começa a construir a jogada!"};
-        String[] cantoCasaParaMeioCampoGolo = {"E já está! A equipa visitante marcou!" , "Está lá dentroooo! O guarda redes nem teve tempo de pestanejar!","GOLOOO! O guarda redes nao apanha uma!"};
+        String[] cantoForaParaMeioCampo = {"Bola aliviada pelos defesas!", "Canto para " + casa + "não dá em nada!", "Guarda Redes soqueia a bola para longe!"};
+        String[] cantoForaParaCantoFora = {"A bola acaba na bancada , desviada por um defesa!","A defesa atira para fora!", "UI! UI! Partiram a camera do fotógrafo, e é novo canto para " + casa + "!"};
+        String[] cantoForaParaPBF = {"Canto não dá em nada! Pontapé de baliza para "  + casa, "Mas que desastre! O central não dá uma para a caixa!", "Que asneira! O cabeceamento pareceu um corte de um defesa! Mas que asneira! Passou completamnete ao lado!"};
+        String[] cantoForaParaDefFora = {"Alívio do central!", "O Guarda Redes alivia com os punhos!", "" + fora + " recupera a posse e começa a construir a jogada!"};
+        String[] cantoCasaParaMeioCampoGolo = {"E já está! " + fora + " marcou!" , "Está lá dentroooo! O guarda redes nem teve tempo de pestanejar!","GOLOOO! O guarda redes nao apanha uma!"};
         String[] cantoCasaParaMeioCampo = {"Alivia Freitas!", "Mas que força tem o Guarda Redes, alivia para o meio campo!!", "Mas que grande cabeçada do central!"};
-        String[] cantoCasaParaCantoCasa = {"E o centralão resolve!", "Que grande defesa do Guarda Redes! Está a brilhar este jovem!", "Novo canto para a equipa visitante"};
-        String[] cantoCasaParaPBC = {"E vai remateeee.... Foi para foraaa...","O homem chutaaaa...e falhaaa","A bola vai entrar.. vai entrar... mas nao entrou! Ponta pé de baliza par aa equipa da casa!"};
+        String[] cantoCasaParaCantoCasa = {"E o centralão resolve!", "Que grande defesa do Guarda Redes! Está a brilhar este jovem!", "Novo canto para " + fora};
+        String[] cantoCasaParaPBC = {"E vai remateeee.... Foi para foraaa...","O homem chutaaaa...e falhaaa","A bola vai entrar.. vai entrar... mas nao entrou! Ponta pé de baliza para "+ casa + "!"};
         String[] cantoCasaParaDefCasa = {"Alívio da defesa!", "Defesa recomeça a jogada!", "Mas que perigo! O Guarda Redes defende mas para a frente! A recaaaaarga.... Grade defesa! Passa o perigo!"};
         String[] areaForaParaMeioCampoGolo = {"E ele vai , e ele remata e é GOLOOOOOOOOO!","Ta a olhar , ta pensar , disparaaa! GOLOOOOOO","Está mesmo em frente à baliza , tira a as medidas, remataa.... e marcaaaa!"};
-        String[] areaForaParaMeioCampo = {"Alivia Freitas! Passa o perigo da equipa da visitante!", "Passe longo da equipa visitante! Lança a jogada no ataque!", "Bola para o meio campo ofensivo da equipa visitante!"};
-        String[] areaForaParaCantoFora = {"Remate do jogadoooooor.... e bate num defesa! Para canto!", "Temos mais um canto da equipa da casa!", "Grande remate! Mas que defesa do Guarda Redes! Parece que tem asas este gigante!"};
-        String[] areaForaParaPBF = {"E vai um remateee ... acerta num miudo da bancada! É pontapé de baliza para a equipa visitante!","Remate completamente ao lado! O homem deve tar com os olhos tapados! Pontapé de baliza para a equipa visitante", "Remata! E Falha! Ponta pé de baliza para a equipa visitante"};
+        String[] areaForaParaMeioCampo = {"Alivia Freitas! Passa o perigo para" + fora + "!", "Passe longo de " + fora + "! Lança a jogada no ataque!", "Bola para o meio campo ofensivo de " +fora + "!"};
+        String[] areaForaParaCantoFora = {"Remate do jogadoooooor.... e bate num defesa! Para canto!", "Temos mais um canto para " +casa+"!", "Grande remate! Mas que defesa do Guarda Redes! Parece que tem asas este gigante!"};
+        String[] areaForaParaPBF = {"E vai um remateee ... acerta num miúdo da bancada! É pontapé de baliza para " + fora + "!","Remate completamente ao lado! O homem deve tar com os olhos tapados! Pontapé de baliza para " + fora, "Remata! E Falha! Ponta pé de baliza para " + fora};
         String[] areaForaParaDefesaCasa = {"Despacha o perigo da area, o central!", "Mas que potente o corte do Guarda Redes", "E a bola é despachada para a defesa da equipa adversária"};
-        String[] areaForaParaDefesaFora = {"E recomeça a jogada pelos centrais...", "Desenvolve a jogada pela direita a equipa visitante!", "Grande corte! Alivia a defesa a equipa visitante!"};
-        String[] areaCasaParaMeioCampoGolo = {"Está muito perigoso! É Golooo , a equipa visitante arruina a equipa da casa!","É GOLOOOO! Equipa visitante marca !","Já está lá dentro ! Rasgou a rede ! Equipa visitante aumenta o seu reultado!"};
-        String[] areaCasaParaMeioCampo = {"Alivia o perigo o central da equipa da casa! Mas que jogador!", "Tem estado muito bem a equipa da casa! Defesa implacável!!!", "Remate da equipa visitante e bate no defesa! É uma autentica muralha humana!"};
+        String[] areaForaParaDefesaFora = {"E recomeça a jogada pelos centrais...", "Desenvolve a jogada pela direita " + fora + "!", "Grande corte! Alivia a defesa " + fora + "!"};
+        String[] areaCasaParaMeioCampoGolo = {"Está muito perigoso! É Golooo, " + fora + " arruina " + casa + "!","É GOLOOOO! Equipa " + fora + " marca !","Já está lá dentro ! Rasgou a rede ! Equipa " + fora + " aumenta o seu reultado!"};
+        String[] areaCasaParaMeioCampo = {"Alivia o perigo o central de " + casa + "! Mas que jogador!", "Tem estado muito bem " + casa + "! Defesa implacável!!!", "Remate de " + fora + " e bate no defesa! É uma autentica muralha humana!"};
         String[] areaCasaParaCantoCasa = {"Grande Remate...... E que defesaaaaa!! Ganhou asas o Guarda Redes!!!", "Mas que asneira! Foi para as nuvens o remate!!!", "Para fora do estádio! Parece que nem se está a esforçar este avançado...."};
-        String[] areaCasaParaPBC ={"E vai um remateee ... saiu fora do estádio! É pontapé de baliza para a equipa da casa!","Remateeee...Muito torto ! Nem com uma baliza maior acertava! Pontapé de baliza para a equipa da casa!","Remata! E Falha! Ponta pé de baliza para a equipa da casa"};
-        String[] areaCasaParaDefCasa = {"A equipa da casa consegur evitar o desastre! A equipa da casa pode respirar de alívio!","Passa o perigo da equipa da casa!","Está perigoso! Mas a equipa da casa resolve e atira a bola para fora da area!"};
-        String[] areaCasaParaDefFora = {"Que alívio do guarda redes! Está com força o guardião!", "Passa o perigo da equipa da casa!", "Resolve o central da maneira mais simples!"};
-        String[] defesaCasaParaMeioCampoGolo = {"Que perigo! O Guarda Redes defende mas para a frente... Olha a recarga, olha o golo...É GOLOOOOOOOOO", "Vai tirar... Vai tirar... GOLOOOO! Mas que protento!", "Golasso do Médio!!"};
-        String[] defesaCasaParaMeioCampo = {"A equipa da casa avança para o meio campo!","Os da casa assumem controlo e já estão no meio campo!","vai o ataque dos da casa , estão no meio campo!"};
-        String[] defesaCasaParaCantoCasa = {"A equipa visitante avança ! E conseguem canto!","Sai um remate da equipa visitante! Mas o guarda redes atira para fora","Vao em diração à baliza.. mas a bola é desvidada por um defesa e sai na linha de fundo!"};
-        String[] defesaCasaParaPBC = {"Mas que grande remate....!!! Ao lado! Passa o Perogo!", "É pontapé de baliza para a equipa da casa", "Mas que disparate! Sai longe da baliza o remate!"};
-        String[] defesaCasaParaAreaCasa = {"E a equipa visitante avança !","Vai a equipa visitante no ataque","Está perigoso para a equipa da casa! A equipa visitante já estaá na sua area"};
-        String[] defesaCasaParaDefFora = {"E os defesas da equipa da casa aliviam para muito longe! ","Está seguro ! A bolo é desviada para o outro lado do campo! Grande trabalho da qeuipa da casa! ","E a equipa da casa tira a bola do perigo!"};
-        String[] defesaForaMeioCampoGolo ={"Está perigosoo! E é GOLOOO da equipa da casa!","Vai tirar... Vai tirar... GOLOOOO! Equipa da casa marca!","Golasso do Médio!! Equipa da casa aumenta o resultado!"};
-        String[] defForaParaMeioCampo = {"A formação defensiva começa a jogada", "A defesa constroi a jogada pela direita para os médios", "Equipa da Casa joga para trás para reconstruir a jogada"};
-        String[] defForaParaPBF  = {"Remate da equipa da casa passa a rasar o poste!", "Remate da equipa da casa... passa o perigo!", "Remate de meia distância... Mas que asneira! Foi para as nuvens!"};
-        String[] defForaParaCantoFora = {"Canto para a equipa da casa!", "Olha o remaaaate.... Defesa do guardião! Espetacular!", "Mas que asneira da equipa visitante... Canto para a equipa da casa"};
-        String[] defForaParaAreaFora  = {"E a equipa da casa avança !","Vai a equipa da casa no ataque","Está perigoso para a equipa visitante ! A equipa da casa já está na sua àrea"};
-        String[] defForaParaDefCasa = {"E os defesas da equipa visitante aliviam para muito longe! ","Está seguro ! A bolo é desviada para o outro lado do campo! Grande trabalho da visitante! ","E a equipa visitante tira a bola do perigo!"};
-        String[] meioCampoGoloCasa = {"Sai um remateee.... maluco do meio campo ...e MARCAAA ! É GOLO PARA A EQUIPA DA CASA!","VAI DO MEIO CAMPO ! E É GOLOOO! INCRIVEL A EQUIPA DA CASA","UM REMATE DO MEIO CAMPO ATERRA NAS REDES DA EQUIPA VISITANTE"};
-        String[] meioCampoGoloFora = {"Sai um remateee.... maluco do meio campo ...e MARCAAA ! É GOLO PARA A EQUIPA VISITANTE!","VAI DO MEIO CAMPO ! E É GOLOOO! INCRIVEL A EQUIPA VISITANTE","UM REMATE DO MEIO CAMPO ATERRA NAS REDES DA EQUIPA DA CASA"};
-        String[] meioCampoParaAreaCasa = {"Sai a equipa visitante a jogar e avança para a area da equipa da casa", "A equipa visitante já vai na area da equipa da casa", "A equipa da casa a jogar para trás e analisar o jogo"};
-        String[] meioCampoParaAreaFora = {"Sai a equipa da casa a jogar e avança para a area da equipa visitante", "A equipa da casa já vai na area da equipa visitante", "A equipa visitante a jogar para trás e analisar o jogo"};
-        String[] meioCampoParaDefFora = {"Vai a equipa da casa a construir a jogada e a avançar no meio campo da equipa visitante","Começa a equipa da casa a pressionar","Equipa da casa já vai no ataque"};
-        String[] meioCampoParaDefCasa = {"Vai a equipa visitante a construir a jogada e a avançar no meio campo da equipa da casa","Começa a equipa visitante a pressionar","Equipa visitante já vai no ataque"};
+        String[] areaCasaParaPBC ={"E vai um remateee ... saiu fora do estádio! É pontapé de baliza para " + casa + "!","Remateeee...Muito torto ! Nem com uma baliza maior acertava! Pontapé de baliza para "+casa+"!","Remata! E Falha! Ponta pé de baliza para "+casa};
+        String[] areaCasaParaDefCasa = {"" + casa + " consegue evitar o desastre! "+casa+" pode respirar de alívio!","Passa o perigo "+casa+"!","Está perigoso! Mas "+casa+" resolve e atira a bola para fora da area!"};
+        String[] areaCasaParaDefFora = {"Que alívio do guarda redes! Está com força o guardião!", "Passa o perigo de " + casa + "!", "Resolve o central da maneira mais simples!"};
+        String[] defesaCasaParaMeioCampoGolo = {"Que perigo! O Guarda Redes defende mas para a frente... Olha a recarga, olha o golo...É GOLOOOOOOOOO", "Vai tirar... Vai tirar... GOLOOOO! Mas que protento!", "Golaço do Médio!!"};
+        String[] defesaCasaParaMeioCampo = {casa + " avança para o meio campo!","Os da " + casa + "assumem controlo e já estão no meio campo!","vai o ataque dos da "+casa+" , estão no meio campo!"};
+        String[] defesaCasaParaCantoCasa = {"" + fora + " avança! E conseguem canto!","Sai um remate de " + fora + "! Mas o guarda redes atira para fora","Vão em direção à baliza.. mas a bola é desviada por um defesa e sai na linha de fundo!"};
+        String[] defesaCasaParaPBC = {"Mas que grande remate....!!! Ao lado! Passa o Perigo!", "É pontapé de baliza para"+casa, "Mas que disparate! Sai longe da baliza o remate!"};
+        String[] defesaCasaParaAreaCasa = {"E " + fora + " avança !","Vai " + fora + " no ataque","Está perigoso para "+casa+"! " + fora + " já está na sua area"};
+        String[] defesaCasaParaDefFora = {"E os defesas de "+casa +"aliviam para muito longe! ","Está seguro ! A bola é desviada para o outro lado do campo! Grande trabalho da" + casa,casa+" tira a bola do perigo!"};
+        String[] defesaForaMeioCampoGolo ={"Está perigosoo! E é GOLOOO da equipa de " + casa ,"Vai tirar... Vai tirar... GOLOOOO! " + casa +" marca!","Golaço do Médio!! "+casa+" aumenta o resultado!"};
+        String[] defForaParaMeioCampo = {"A formação defensiva começa a jogada", "A defesa constroi a jogada pela direita para os médios", casa + "joga para trás para reconstruir a jogada"};
+        String[] defForaParaPBF  = {"Remate da "+ casa +" passa a rasar o poste!", "Remate de "+ casa+ "... passa o perigo!", "Remate de meia distância... Mas que asneira! Foi para as nuvens!"};
+        String[] defForaParaCantoFora = {"Canto para "+casa+"!", "Olha o remaaaate.... Defesa do guardião! Espetacular!", "Mas que asneira de " + fora + "... Canto para "+casa};
+        String[] defForaParaAreaFora  = {casa +" avança !","Vai "+casa+" no ataque","Está perigoso para " + fora + "! " + casa + " já está na sua àrea"};
+        String[] defForaParaDefCasa = {"E os defesas de " + fora + " aliviam para muito longe! ","Está seguro ! A bola é desviada para o outro lado do campo! Grande trabalho de " + fora + "! ","E " + fora + " tira a bola do perigo!"};
+        String[] meioCampoGoloCasa = {"Sai um remateee.... maluco do meio campo ...e MARCAAA ! É GOLO PARA "+casa+"!","VAI DO MEIO CAMPO ! E É GOLOOO! INCRÍVEL "+casa,"UM REMATE DO MEIO CAMPO ATERRA NAS REDES DE " + fora};
+        String[] meioCampoGoloFora = {"Sai um remateee.... maluco do meio campo ...e MARCAAA ! É GOLO PARA A " +fora+ "!","VAI DO MEIO CAMPO ! E É GOLOOO! INCRÍVEL " + fora,"UM REMATE DO MEIO CAMPO ATERRA NAS REDES DA EQUIPA DA "+casa};
+        String[] meioCampoParaAreaCasa = {"Sai "+fora +" a jogar e avança para "+casa, "" + fora + " já vai na area da equipa"+casa, casa+" vai jogar para trás e analisar o jogo"};
+        String[] meioCampoParaAreaFora = {"Sai " +casa+" a jogar e avança para a area de " + fora , casa + "já vai na area de " + fora , fora + " a jogar para trás e analisar o jogo"};
+        String[] meioCampoParaDefFora = {"Vai "+casa+ " a construir a jogada e a avançar no meio campo de " + fora,"Começa " +casa + " a pressionar",casa + " já vai no ataque"};
+        String[] meioCampoParaDefCasa = {"Vai "+fora+" a construir a jogada e a avançar no meio campo de " + casa,"Começa " + fora+ " a pressionar",fora+ " já vai no ataque"};
 
         if(bolaDepois.equals("Meio Campo") && bolaAntes.equals("Pontape de Baliza Fora")){
             System.out.println(pBFParaMeioCampo[rand_int]);
@@ -299,7 +318,6 @@ public class FMView {
             System.out.println(cantoCasaParaDefCasa[rand_int]);
 
         }
-
 
 
         if(bolaDepois.equals("Meio Campo") && (result == 1) && bolaAntes.equals("Area Fora")){
@@ -402,7 +420,31 @@ public class FMView {
             System.out.println(meioCampoParaDefCasa[rand_int]);
         }
 
-
-
     }
+
+    public static void displayResultado(String nomeCasa, String nomeFora, int golosCasa, int golosFora){
+        if (golosCasa > golosFora){
+            System.out.println("E o árbitro apita, chegamos ao fim do jogo! " + nomeCasa + " sai vitoriosa!");
+            System.out.println("" + nomeCasa + " " + golosCasa + " - " + golosFora + " " + nomeFora);
+        }
+        else if (golosCasa < golosFora){
+            System.out.println("E o árbitro apita, chegamos ao fim do jogo! " + nomeFora + " sai vitoriosa!");
+            System.out.println("" + nomeCasa + " " + golosCasa + " - " + golosFora + " " + nomeFora);
+        }
+        else if (golosCasa != 0 && golosFora != 0){
+            System.out.println("Saímos desta noite com o marcador empatado! Mas foi um jogo intenso e com grande qualidade! Ambas as equipas estão de parabéns!");
+            System.out.println("" + nomeCasa + " " + golosCasa + " - " + golosFora + " " + nomeFora);
+        }
+        else{
+            System.out.println("Saímos desta noite de jogo sem golos... Um jogo morto sem grande emoção, no entanto, a defesa de ambas a equipa esteve muito bem!");
+            System.out.println("" + nomeCasa + " " + golosCasa + " - " + golosFora + " " + nomeFora);
+        }
+    }
+
+    public static String pedeNomeFicheiro(){
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Qual é o nome do Ficheiro do qual quer carregar o estado? ");
+        return sc.nextLine();
+    }
+
 }

@@ -1,8 +1,9 @@
 package com.company;
+import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Liga {
+public class Liga implements Serializable {
     private Map<String,Equipa> equipas;
     private List<Jogo> jogos;
     private int n_equipas;
@@ -253,6 +254,21 @@ public class Liga {
         return result;
     }
 
+    public void guardaBin(String nomeFicheiro) throws FileNotFoundException, IOException {
+        FileOutputStream bf = new FileOutputStream(nomeFicheiro);
+        ObjectOutputStream oos = new ObjectOutputStream(bf);
+        oos.writeObject(this);
+        oos.flush();
+        oos.close();
+    }
+
+    public static Liga readObj(String nomeFich) throws IOException, ClassNotFoundException{
+        FileInputStream bf = new FileInputStream(nomeFich);
+        ObjectInputStream ois = new ObjectInputStream(bf);
+        Liga l = (Liga) ois.readObject();
+        ois.close();
+        return l;
+    }
 
 
 }

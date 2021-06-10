@@ -1,10 +1,11 @@
 package com.company;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Jogo {
+public class Jogo implements Serializable {
     private String nomeEquipaCasa;
     private String nomeEquipaFora;
     private int golosCasa;
@@ -406,7 +407,6 @@ public class Jogo {
         if (rand_int <= goloCasa) {
             this.golosCasa++;
             result = 1;
-            System.out.println("GOLO CARALHO");
             this.bola = "Meio Campo";
         } else if (rand_int <= goloCasa + cantoFora){
             this.bola = "Canto Fora";
@@ -454,7 +454,6 @@ public class Jogo {
         if (rand_int <= goloCasa) {
             this.golosCasa++;
             result = 1;
-            System.out.println("GOLO CARALHO");
             this.bola = "Meio Campo";
         } else if (rand_int <= goloCasa + cantoFora) {
             this.bola = "Canto Fora";
@@ -486,7 +485,6 @@ public class Jogo {
         if (rand_int <= goloCasa) {
             this.golosCasa++;
             result = 1;
-            System.out.println("GOLO CARALHO");
             this.bola = "Meio Campo";
         } else if (rand_int <= goloCasa + areaFora) {
             this.bola = "Area Fora";
@@ -518,12 +516,10 @@ public class Jogo {
         if (rand_int <= goloCasa) {
             this.golosCasa++;
             result = 1;
-            System.out.println("GOLO CARALHO");
             this.bola = "Meio Campo";
         } else if (rand_int <= goloCasa + goloFora) {
             this.golosFora++;
             result = 2;
-            System.out.println("GOLO CARALHO");
             this.bola = "Meio Campo";
         } else if (rand_int <= goloCasa + goloFora + areaCasa) {
             this.bola = "Area Casa";
@@ -553,7 +549,6 @@ public class Jogo {
         if (rand_int <= goloFora) {
             this.golosFora++;
             result = 2;
-            System.out.println("GOLO CARALHO");
             this.bola = "Meio Campo";
         } else if (rand_int <= goloFora + meioCampo) {
             this.bola = "Meio Campo";
@@ -585,7 +580,6 @@ public class Jogo {
         if (rand_int <= cantoCasa) {
             result = 2;
             this.golosFora++;
-            System.out.println("GOLO CARALHO");
             this.bola = "Meio Campo";
         } else if (rand_int <= goloFora) {
             this.bola = "Canto Casa";
@@ -633,7 +627,6 @@ public class Jogo {
         int result = 0;
         if (rand_int <= goloFora){
             this.golosFora++;
-            System.out.println("GOLO CARALHO");
             result = 2;
             this.bola = "Meio Campo";
         }

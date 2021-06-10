@@ -1,8 +1,9 @@
 package com.company;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Lateral extends Jogador{
+public class Lateral extends Jogador implements Serializable {
     private  int cruzamentos;
 
 
@@ -108,6 +109,15 @@ public class Lateral extends Jogador{
                 (double) this.getCruzamentos() * 0.15);
     }
 
+    /**
+     * Método de representação das habilidades do Jogador com os atributos especiais do Lateral sob a forma de uma String
+     * @return String com a representação das habilidades do Lateral
+     **/
+
+    public String toStringHabilidades(){
+        return super.toStringHabilidades() +
+                "\nCruzamentos: "   + this.cruzamentos ;
+    }
 
 
 }

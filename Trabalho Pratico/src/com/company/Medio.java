@@ -1,8 +1,9 @@
 package com.company;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Medio extends Jogador{
+public class Medio extends Jogador implements Serializable {
 
     private int recBola;
 
@@ -112,5 +113,14 @@ public class Medio extends Jogador{
                 (double) this.getRecBola() * 0.15);
     }
 
+    /**
+     * Método de representação das habilidades do Jogador com os atributos especiais do Médio sob a forma de uma String
+     * @return String com a representação das habilidades do Médio
+     **/
+
+    public String toStringHabilidades(){
+        return super.toStringHabilidades() +
+                "\nRecuperação de Bolas: "   + this.recBola;
+    }
 
 }

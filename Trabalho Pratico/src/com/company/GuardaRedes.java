@@ -1,8 +1,9 @@
 package com.company;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class GuardaRedes extends Jogador{
+public class GuardaRedes extends Jogador implements Serializable {
 
     private int elasticidade;
 
@@ -81,7 +82,8 @@ public class GuardaRedes extends Jogador{
 
     public static GuardaRedes parse(String input){
         String[] campos = input.split(",");
-        return new GuardaRedes(campos[0], Integer.parseInt(campos[1]),
+        return new GuardaRedes  (campos[0],
+                Integer.parseInt(campos[1]),
                 Integer.parseInt(campos[2]),
                 Integer.parseInt(campos[3]),
                 Integer.parseInt(campos[4]),
@@ -94,6 +96,15 @@ public class GuardaRedes extends Jogador{
                 new ArrayList<>());
     }
 
+    /**
+     * Método de representação das habilidades do Jogador com os atributos especiais sob a forma de uma String
+     * @return String com a representação das habilidades do GuardaRedes
+     **/
+
+    public String toStringHabilidades(){
+        return super.toStringHabilidades() +
+                "\nElasticidade: "   + this.elasticidade ;
+    }
 }
 
 

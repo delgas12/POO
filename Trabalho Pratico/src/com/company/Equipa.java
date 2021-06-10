@@ -1,12 +1,13 @@
 package com.company;
 
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.lang.Thread.sleep;
 
-public class Equipa implements Comparable<Equipa>{
+public class Equipa implements Comparable<Equipa>, Serializable {
     private String nome;
     private Map<Integer, Jogador> jogadores;
     private Map<String,List<Jogador>> titulares;

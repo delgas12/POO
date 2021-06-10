@@ -1,8 +1,9 @@
 package com.company;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public abstract class Jogador implements Comparable<Jogador>{
+public abstract class Jogador implements Comparable<Jogador>, Serializable {
     private String nome;
     private int numero;
     private int velocidade;
@@ -281,6 +282,8 @@ public abstract class Jogador implements Comparable<Jogador>{
         return (j.getHabilidade() - this.getHabilidade());
     }
 
+
+
     /**
      * Método de representação da classe Jogador sob a forma de uma String
      * @return String com a representação da classe Jogador
@@ -292,6 +295,25 @@ public abstract class Jogador implements Comparable<Jogador>{
                 "\nDestreza: " + this.destreza + "\nImpulsão: " + this.impulsao + "\nJogo De Cabeça: " + this.jogoDeCabeca +
                 "\nRemate: " + this.remate + "\nPasse: " + this.passe + "\nPosição: " + this.posicao; + "\nHabilidade: " + this.habilidade +
                 "\nHistorial: " + this.historial.toString()*/
+    }
+
+    /**
+     * Método de representação das habilidades do Jogador sob a forma de uma String
+     * @return String com a representação das habilidades do Jogador
+     **/
+
+    public String toStringHabilidades(){
+        return "Estatísticas do Jogador: " +
+                "\nNumero: "         + this.numero               +
+                "\nVelocidade: "     + this.velocidade           +
+                "\nResistencia: "    + this.resistencia          +
+                "\nDestreza: "       + this.destreza             +
+                "\nImpulsão: "       + this.impulsao             +
+                "\nJogo De Cabeça: " + this.jogoDeCabeca         +
+                "\nRemate: "         + this.remate               +
+                "\nPasse: "          + this.passe                +
+                "\nPosição: "        + this.posicao              +
+                "\nHistorial: "      + this.historial.toString() ;
     }
 
     /**

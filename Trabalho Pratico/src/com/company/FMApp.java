@@ -1,5 +1,8 @@
 package com.company;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +15,7 @@ public class FMApp {
 
         Liga l = new Liga();
 
-        String[] s = {"**** FM_APP ****\n", "Gerir a Liga", "Menu de Consulta","Jogo","Carregar Estado De Um Ficheiro"};
+        String[] s = {"**** FM_APP ****\n", "Gerir a Liga", "Menu de Consulta","Jogar","Carregar Estado De Um Ficheiro de texto", "Carregar Estado De Um Ficheiro de Objetos", "Guardar Estado Em Ficheiro de Objetos"};
         Menu start = new Menu(s);
         Jogador j;
         String jogadorConsultar = "";
@@ -29,7 +32,6 @@ public class FMApp {
                     menuConsulta(l);
                     break;
                 case 3:
-                    //chamar o metodo do jogo
                     menuJogo(l);
                     break;
                 case 4:
@@ -38,14 +40,28 @@ public class FMApp {
                         System.out.println("correu");
                         p = new Parser();
                         p.parse();
-                        //System.out.println(p.getEquipas().toString());
                         l.setEquipas(p.getEquipas());
                         l.setJogos(p.getJogos());
-                        //System.out.println(l.toString());
-                        //System.out.println(l.getEquipa("Mahler Athletic"));
-                        //System.out.println(l.getJogos());
                     }
                     catch (LinhaIncorretaException | InsufficientPlayers e) {
+                        System.out.println(e.getMessage());
+                    }
+                    break;
+                case 5:
+                    String nomeFichRead = FMView.pedeNomeFicheiro();
+                    try{
+                        l = Liga.readObj(nomeFichRead);
+                    }
+                    catch (IOException | ClassNotFoundException e){
+                        System.out.println(e.getMessage());
+                    }
+                    break;
+                case 6:
+                    String nomeFichWrite = FMView.pedeNomeFicheiro();
+                    try{
+                        l.guardaBin(nomeFichWrite);
+                    }
+                    catch(IOException e){
                         System.out.println(e.getMessage());
                     }
                     break;
@@ -54,9 +70,12 @@ public class FMApp {
             }
         }
     }
-
+    /**
+     *  Metodo responsável por construir e executar o Menu De Gestão
+     * @param l Classe Liga que aramazena o estado do programa
+     **/
     private static void menuGestao(Liga l){
-        String[] s = {"Adicionar Jogador", "Adicionar Equipa", "Mudar Jogador de Equipa"};
+        String[] s = {"*** MENU GESTAO ***", "Adicionar Jogador", "Adicionar Equipa", "Mudar Jogador de Equipa"};
         Menu gestao = new Menu(s);
         int getOpt = -1;
         String equipa = "";
@@ -80,17 +99,15 @@ public class FMApp {
                     }
                     try{
                         l.addJogador(j, equipa);
-                        System.out.println(l.getJogadorLiga(equipa, j));
+                        FMView.displayHabilidadeJogador(l.getJogadorLiga(equipa, j));
                     }
                     catch(EquipaNaoExisteException | JogadorNaoExiste | NumeroNaoDisponivel e){
                         System.out.println(e.getMessage());
                     }
-                    //System.out.println(l.getEquipa(equipa));
                     break;
                 case 2:
                     equipa = FMView.getEquipa();
                     l.criaEquipa(equipa);
-                    //System.out.println(l.getEquipa(equipa));
                     break;
                 case 3:
                     Map.Entry<String, Map.Entry<String, String>> transf = FMView.getTransferencia();
@@ -99,15 +116,14 @@ public class FMApp {
                     try{
                         origem = l.getEquipa(transf.getValue().getKey());
                         destino = l.getEquipa(transf.getValue().getValue());
-                        //System.out.println(origem.toString());
-                        //System.out.println(destino.toString());
                         l.transferencia(transf);
+                        FMView.displayEquipa(origem);
+                        FMView.displayEquipa(destino);
                     }
                     catch(NumeroNaoDisponivel | EquipaNaoExisteException | JogadorNaoExiste e){
                         System.out.println(e.getMessage());
                     }
-                    System.out.println(origem.toString());
-                    System.out.println(destino.toString());
+
                     break;
 
             }
@@ -115,6 +131,10 @@ public class FMApp {
 
     }
 
+    /**
+     *  Método responsável por contruir e executar o Menu de Consulta
+     * @param l Classe liga que armazena o estado do programa
+     **/
     private static void menuConsulta(Liga l){
         String[] s = {"**** Menu de Consulta ****", "Consultar Equipa", "Consultar Jogador", "Calcular Habilidade Jogador", "Calcular Habilidade Equipa"};
         Menu consulta = new Menu(s);
@@ -137,7 +157,7 @@ public class FMApp {
                 case 2:
                     jogadorConsultar = FMView.consultarJogador();
                     try{
-                        FMView.displayJogador(l.consultaJogador(jogadorConsultar));
+                        FMView.displayHabilidadeJogador(l.consultaJogador(jogadorConsultar));
                     }
                     catch(JogadorNaoExiste e){
                         System.out.println(e.getMessage());
@@ -175,8 +195,13 @@ public class FMApp {
         }
     }
 
+    /**
+     *  Metodo responsável por construir e executar o Menu De Jogo
+     * @param l Classe Liga que contém o estado atual do programa
+     **/
+
     private static void menuJogo(Liga l) {
-        String[] s = {"**** Menu Jogo ****\n", "Escolher Equipas", "Escolher Titulares Casa" , "Escolher Titulares Fora", "Jogar", "Desforra", "Novo Jogo"};
+        String[] s = {"**** Menu Jogo ****\n", "Escolher Equipas", "Escolher Tática Casa" , "Escolher Tática Fora", "Jogar", "Desforra", "Novo Jogo"};
         Menu jogo = new Menu(s);
         Jogo j = new Jogo();
         Equipa casa = null;
@@ -208,9 +233,7 @@ public class FMApp {
                             String[] posicoes = tatica.split("-");
                             casa.criaInicial(Integer.parseInt(posicoes[0]), Integer.parseInt(posicoes[1]), Integer.parseInt(posicoes[2]), Integer.parseInt(posicoes[3]));
                             casa.calculaHabilidadeEquipa();
-                            j.setJogadoresCasa(casa.getTitularesList().stream().map(jog -> jog.getNumeroJogador()).collect(Collectors.toList()));
-                            //j.setJogadoresCasa(FMView.mostraJogadores(j.getEquipaCasa()));
-                            //j.adicionaTitularesCasaJogo();
+                            j.setJogadoresCasa(casa.getTitularesList().stream().map(Jogador::getNumeroJogador).collect(Collectors.toList()));
                             l.adicionaEquipa(casa);
                             FMView.displayEquipa(casa);
                         }
@@ -227,9 +250,7 @@ public class FMApp {
                             String[] posicoes = tatica.split("-");
                             fora.criaInicial(Integer.parseInt(posicoes[0]), Integer.parseInt(posicoes[1]), Integer.parseInt(posicoes[2]), Integer.parseInt(posicoes[3]));
                             fora.calculaHabilidadeEquipa();
-                            j.setJogadoresFora(fora.getTitularesList().stream().map(jog -> jog.getNumeroJogador()).collect(Collectors.toList()));
-                            //j.setJogadoresFora(FMView.mostraJogadores(j.getEquipaFora()));
-                            //j.adicionaTitularesForaJogo();
+                            j.setJogadoresFora(fora.getTitularesList().stream().map(Jogador::getNumeroJogador).collect(Collectors.toList()));
                             l.adicionaEquipa(fora);
                             FMView.displayEquipa(fora);
                         }
@@ -268,6 +289,14 @@ public class FMApp {
 
     }
 
+    /**
+     * Método responsável por executar a simulação de um jogo
+     * @param casa Objeto da Classe Equipa que armazena o estado da equioa da casa
+     * @param fora Objeto da Classe Equipa que armazena o estado da equioa de fora
+     * @param j Objeto da Classe Jogo que armazena o estado do jogo a executar
+     * @param l Objeto da Classe Liga que armazena o estado do programa
+     * @throws InterruptedException que vem do método sleep
+     **/
     public static void correJogo(Equipa casa, Equipa fora, Jogo j , Liga l) throws InterruptedException{
         int resultJogada = 0;
         String bolaAntes = "";
@@ -286,13 +315,12 @@ public class FMApp {
         else if (j.getJogadoresFora().size() == 0){
             FMView.erros(4);
         }
-        else{// 68 65
+        else{
             int periodos = 0;
             int habCasa = casa.calculaHabilidadeEquipa();
             int habFora = fora.calculaHabilidadeEquipa();
             int difHab = habCasa - habFora;
-            System.out.println("A Habilidade de " + casa.getNome() + " é: " + habCasa);
-            System.out.println("A Habilidade de " + fora.getNome() + " é: " + habFora);
+            FMView.infoInicioJogo(casa.getNome(),fora.getNome(),habCasa,habFora);
             if (difHab > 0){
                 if (difHab > 5) habCasa = 5;
                 else habCasa = difHab;
@@ -307,7 +335,6 @@ public class FMApp {
             boolean subValida = false;
             int subsCasa = 0, subsFora = 0;
             while (periodos < 18){
-                //if (subValida || periodos == 0) System.out.println(j.getBola());
                 if (periodos % 2 == 0){
                     try{
                         equipa = FMView.pedeSubstituicao();
@@ -342,35 +369,25 @@ public class FMApp {
                     l.adicionaEquipa(eq);
                     habCasa = casa.calculaHabilidadeEquipa();
                     habFora = fora.calculaHabilidadeEquipa();
-                    Thread.sleep(2000);
                     bolaAntes = j.getBola();
                     resultJogada = j.calculaJogo(habCasa, habFora);
                     bolaDepois = j.getBola();
-                    FMView.displayJogadas(bolaAntes,bolaDepois,resultJogada);
+                    FMView.displayJogadas(bolaAntes,bolaDepois,resultJogada,casa.getNome(),fora.getNome());
 
                 }
                 else if (equipa.equals("")){
                     bolaAntes = j.getBola();
                     resultJogada = j.calculaJogo(habCasa,habFora);
                     bolaDepois = j.getBola();
-                    FMView.displayJogadas(bolaAntes,bolaDepois,resultJogada);
+                    FMView.displayJogadas(bolaAntes,bolaDepois,resultJogada,casa.getNome(),fora.getNome());
                 }
                 else periodos--;
                 periodos++;
+                Thread.sleep(2000);
                 equipa = "";
                 subValida = false;
             }
-            System.out.println(casa.getNome() + " " + j.getGolosCasa() + " - "  + j.getGolosFora() +  " " + fora.getNome() );
+            FMView.displayResultado(casa.getNome(),fora.getNome(),j.getGolosCasa(),j.getGolosFora());
         }
     }
 }
-
-// Wagner Athletic
-// Sporting Club Schubert
-
-//Avançado,Jucca,13,100,100,100,100,100,100,100,100,100,
-//Defesa,Toldy,13,100,100,100,100,100,100,100,100,100
-//Lateral,Castiçu,13,100,100,100,100,100,100,100,100,100
-
-// David Alexandre Ferreira Duarte
-// Tiago Lucas Alves

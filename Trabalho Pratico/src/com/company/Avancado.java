@@ -1,8 +1,9 @@
 package com.company;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Avancado extends Jogador{
+public class Avancado extends Jogador implements Serializable {
 
     private int agilidade;
     private int finalizacao;
@@ -64,6 +65,16 @@ public class Avancado extends Jogador{
 
     public void setFinalizacao(int finalizacao){this.finalizacao = finalizacao;}
 
+    /**
+     * Método de representação das habilidades do Jogador com o atributo especial do avançado sob a forma de uma String
+     * @return String com a representação das habilidades do avancado
+     **/
+
+    public String toStringHabilidades(){
+        return super.toStringHabilidades()           +
+                "\nAgilidade: "   + this.agilidade   +
+                "\nFinalização: " + this.finalizacao ;
+    }
 
 
     /**
@@ -143,5 +154,7 @@ public class Avancado extends Jogador{
                 (double) this.getPasse() * 0.10 +
                 (double) this.getAgilidade() * 0.10);
     }
+
+
 
 }
