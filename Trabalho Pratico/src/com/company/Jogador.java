@@ -2,6 +2,7 @@ package com.company;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Jogador implements Comparable<Jogador>, Serializable {
     private String nome;
@@ -15,7 +16,7 @@ public abstract class Jogador implements Comparable<Jogador>, Serializable {
     private int passe;
     private int habilidade;
     private String posicao; // (GR, Defesa, Medios, Avançados)
-    private ArrayList<String> historial;
+    private List<String> historial;
 
 
     public abstract  int calculateHability();
@@ -154,7 +155,7 @@ public abstract class Jogador implements Comparable<Jogador>, Serializable {
      *  Método de consulta do valor da variável de instância Historial
      * @return valor da variável de instância Historial do jogador
      **/
-    public ArrayList<String> getHistorial() {
+    public List<String> getHistorial() {
         return this.historial;
     }
 
